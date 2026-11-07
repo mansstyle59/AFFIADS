@@ -223,7 +223,7 @@ h3 { font-size: 1.45rem; line-height: 1.25; font-weight: 750; }
 }
 @media (max-width: 760px) {
   .site-header { padding-top: calc(var(--safe-top) + 28px); }
-  html { scroll-padding-top: 76px; }
+  html { scroll-padding-top: calc(var(--safe-top) + 108px); }
   .container { width: min(var(--container), calc(100% - 36px)); }
   .section { padding: 78px 0; }
   .header-inner { min-height: 68px; }

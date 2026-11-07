@@ -72,6 +72,14 @@ def main():
     require("<title>" in html and "</title>" in html, "titre SEO présent")
     require('name="description"' in html, "meta description présente")
 
+    canonical_url = "https://mansstyle59.github.io/AFFIADS/"
+    require(f'<link rel="canonical" href="{canonical_url}">' in html,
+            "URL canonique correspondant au site GitHub Pages actuel")
+    require(f'<meta property="og:url" content="{canonical_url}">' in html,
+            "URL Open Graph cohérente avec l’URL canonique")
+    require('name="twitter:card" content="summary"' in html,
+            "carte de partage Twitter/X configurée")
+
     required_ids = {"accueil", "contenu", "services", "approche", "contact", "confidentialite"}
     missing_ids = required_ids.difference(parser.ids)
     require(not missing_ids, f"sections principales présentes : {sorted(required_ids)}")

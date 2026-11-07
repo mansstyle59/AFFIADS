@@ -341,3 +341,26 @@ h3 { font-size: 1.45rem; line-height: 1.25; font-weight: 750; }
     background-color: #101827;
   }
 }
+
+/* Pages juridiques AFFIADS */
+.footer-legal { display: flex; flex-wrap: wrap; gap: 16px; }
+.footer-legal a { color: #aeb9c8; text-decoration: underline; text-underline-offset: 3px; }
+.footer-legal a:hover { color: var(--accent); }
+.legal-page { min-height: 70vh; color: var(--ink); background: var(--paper); }
+.legal-page .legal-header { padding: 54px 0 28px; }
+.legal-page .legal-eyebrow { color: #6f7b8c; font-size: .78rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+.legal-page h1 { max-width: 900px; margin: 14px 0 18px; font-size: clamp(2.4rem, 6vw, 4.5rem); }
+.legal-page .legal-intro { max-width: 780px; color: #5e6a7b; line-height: 1.75; }
+.legal-warning { margin: 22px 0 0; padding: 16px 18px; border: 1px solid #e5c36d; border-radius: 14px; color: #5d4814; background: #fff8e4; line-height: 1.6; }
+.legal-content { max-width: 850px; padding-bottom: 80px; }
+.legal-content section { padding: 24px 0; border-top: 1px solid #dfe4ea; }
+.legal-content h2 { margin-bottom: 12px; font-size: clamp(1.35rem, 3vw, 1.8rem); }
+.legal-content h3 { margin: 18px 0 8px; font-size: 1.05rem; letter-spacing: -.02em; }
+.legal-content p, .legal-content li { color: #4d596a; line-height: 1.8; }
+.legal-content ul { padding-left: 22px; }
+.legal-content a { color: #5148ff; text-decoration: underline; text-underline-offset: 3px; }
+.legal-back { display: inline-flex; margin: 24px 0 0; color: #5148ff; font-weight: 700; }
+@media (max-width: 520px) {
+  .footer-legal { width: 100%; order: 4; gap: 12px; }
+  .legal-page .legal-header { padding-top: 36px; }
+}

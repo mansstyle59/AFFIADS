@@ -37,6 +37,16 @@
 
   if (!form || !status) return;
 
+  // GitHub Pages ne prend pas en charge les Pages Functions Cloudflare.
+  // Tant qu’aucun backend n’est raccordé, ne collecter ni transmettre de donnée personnelle.
+  const pagesFormNotice = form.querySelector(".form-unavailable");
+  if (pagesFormNotice) {
+    const button = form.querySelector('button[type="submit"]');
+    if (button) button.disabled = true;
+    form.addEventListener("submit", (event) => event.preventDefault());
+    return;
+  }
+
   const setStatus = (message, state) => {
     status.textContent = message;
     status.dataset.state = state;

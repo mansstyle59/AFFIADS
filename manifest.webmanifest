@@ -1,0 +1,28 @@
+{
+  "id": "./",
+  "name": "AFFIADS — Conseil IA & création digitale",
+  "short_name": "AFFIADS",
+  "description": "Conseil en intelligence artificielle et création digitale : sites vitrines, applications web, outils numériques et automatisations.",
+  "lang": "fr",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "theme_color": "#101827",
+  "background_color": "#111214",
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "./assets/brand/affiads-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "./apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

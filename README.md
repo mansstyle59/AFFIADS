@@ -21,6 +21,13 @@ Site vitrine AFFIADS pour présenter les prestations de création digitale et de
 
 Le site est volontairement léger : HTML, CSS et JavaScript natifs, sans framework ni dépendance à installer. Les fonctions serveur utilisent Cloudflare Pages Functions.
 
+## Installation PWA / iPhone
+
+- `manifest.webmanifest` décrit le nom AFFIADS, le lancement autonome et le périmètre relatif `./`, compatible avec le sous-répertoire GitHub Pages `/AFFIADS/`.
+- Le manifest réutilise l’icône SVG officielle et l’Apple Touch Icon PNG 180 × 180. iOS s’appuie également sur les métadonnées Apple présentes dans les pages.
+- Sur iPhone, l’installation se fait depuis Safari via **Partager → Sur l’écran d’accueil**. Le manifest ne remplace pas cette action utilisateur.
+- Aucun service worker ni cache hors ligne n’est configuré à ce stade : cela évite les mises à jour bloquées par un cache PWA ancien. La vitrine nécessite une connexion réseau.
+
 ## Configuration Cloudflare Pages
 
 Le fichier wrangler.toml prépare le projet AFFIADS pour Cloudflare Pages :

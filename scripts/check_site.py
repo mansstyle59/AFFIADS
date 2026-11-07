@@ -3,6 +3,7 @@
 
 from collections import Counter
 from html.parser import HTMLParser
+import json
 import re
 from pathlib import Path
 from urllib.parse import urlsplit
@@ -58,14 +59,16 @@ def main():
     workflow_path = ROOT / ".github" / "workflows" / "pages.yml"
     privacy_path = ROOT / "confidentialite.html"
     legal_path = ROOT / "mentions-legales.html"
+    manifest_path = ROOT / "manifest.webmanifest"
 
-    for path in (index_path, css_path, js_path, icon_path, workflow_path, privacy_path, legal_path):
+    for path in (index_path, css_path, js_path, icon_path, workflow_path, privacy_path, legal_path, manifest_path):
         require(path.is_file(), f"fichier requis présent : {path.relative_to(ROOT)}")
 
     html = index_path.read_text(encoding="utf-8")
     css = css_path.read_text(encoding="utf-8")
     js = js_path.read_text(encoding="utf-8")
     workflow = workflow_path.read_text(encoding="utf-8")
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
 
     parser = SiteParser()
     parser.feed(html)
@@ -73,6 +76,29 @@ def main():
     require('lang="fr"' in html, "document déclaré en français")
     require("<title>" in html and "</title>" in html, "titre SEO présent")
     require('name="description"' in html, "meta description présente")
+
+    for page_path in (index_path, privacy_path, legal_path):
+        page_html = page_path.read_text(encoding="utf-8")
+        page_name = page_path.name
+        require('rel="manifest" href="./manifest.webmanifest"' in page_html,
+                f"manifest PWA lié dans {page_name}")
+        require('name="apple-mobile-web-app-capable" content="yes"' in page_html,
+                f"mode application iOS déclaré dans {page_name}")
+
+    require(manifest.get("display") == "standalone", "manifest prévu pour l’affichage autonome")
+    require(manifest.get("start_url") == "./index.html" and manifest.get("scope") == "./",
+            "start_url et scope relatifs au sous-répertoire GitHub Pages")
+    require(manifest.get("theme_color") == "#101827" and manifest.get("background_color") == "#111214",
+            "couleurs PWA cohérentes avec l’identité AFFIADS")
+    manifest_icons = manifest.get("icons", [])
+    require(any(icon.get("src") == "./assets/brand/affiads-icon.svg" and icon.get("sizes") == "any"
+                for icon in manifest_icons), "icône SVG officielle présente dans le manifest")
+    require(any(icon.get("src") == "./apple-touch-icon.png" and icon.get("sizes") == "180x180"
+                for icon in manifest_icons), "icône iOS PNG présente dans le manifest")
+    for icon in manifest_icons:
+        icon_path = urlsplit(icon.get("src", "")).path
+        require(bool(icon_path) and not icon_path.startswith("/") and (ROOT / icon_path).is_file(),
+                f"fichier d’icône PWA présent : {icon.get('src', '')}")
 
     canonical_url = "https://mansstyle59.github.io/AFFIADS/"
     require(f'<link rel="canonical" href="{canonical_url}">' in html,
@@ -175,6 +201,8 @@ def main():
             "fichiers principaux inclus dans le déploiement statique")
     require("cp confidentialite.html mentions-legales.html _site/" in workflow,
             "pages juridiques incluses dans le déploiement GitHub Pages")
+    require("manifest.webmanifest _site/" in workflow,
+            "manifest PWA inclus dans l’artefact GitHub Pages")
     require("path: _site" in workflow, "artefact GitHub Pages issu du dossier _site")
 
     print("\nAFFIADS : contrôles statiques terminés avec succès.")

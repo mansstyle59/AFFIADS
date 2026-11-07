@@ -30,7 +30,7 @@ body::before {
   height: var(--safe-top);
   z-index: 110;
   pointer-events: none;
-  background: var(--ink);
+  background: #101827;
 }
 body {
   margin: 0;
@@ -73,7 +73,7 @@ h3 { font-size: 1.45rem; line-height: 1.25; font-weight: 750; }
 .button-outline:hover { border-color: var(--accent); }
 
 /* Header */
-.site-header { position: sticky; z-index: 100; top: 0; padding-top: var(--safe-top); color: var(--white); background: rgba(16, 24, 39, .97); border-bottom: 1px solid rgba(255,255,255,.08); }
+.site-header { position: sticky; z-index: 100; top: 0; padding-top: var(--safe-top); color: var(--white); background: #101827; border-bottom: 1px solid rgba(255,255,255,.08); }
 .header-inner { display: flex; align-items: center; justify-content: space-between; min-height: 78px; }
 .brand { display: inline-flex; align-items: center; gap: 11px; flex-shrink: 0; }
 .brand-name { font-family: "Manrope", sans-serif; font-size: 1.12rem; font-weight: 800; letter-spacing: .08em; }

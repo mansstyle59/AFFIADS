@@ -114,3 +114,15 @@ Aucun test d’envoi e-mail ne peut réussir avant la configuration des variable
 ## Licence
 
 À définir par le propriétaire avant une diffusion ou réutilisation publique du code.
+
+## Identité visuelle AFFIADS
+
+Les logos SVG officiels sont centralisés dans `assets/brand/` :
+
+- [Icône officielle](assets/brand/affiads-icon.svg) — symbole seul, utilisé dans l’en-tête et le footer.
+- [Logo horizontal clair](assets/brand/affiads-logo-light.svg) — fond clair.
+- [Logo horizontal sombre](assets/brand/affiads-logo-dark.svg) — fond sombre.
+- [Favicon SVG](assets/brand/favicon.svg) — icône de navigateur.
+- `apple-touch-icon.png` — icône iOS 180 × 180.
+
+Palette officielle : bleu électrique `#4D4AFF`, violet `#713CF4`, jaune `#FFC12E`, blanc `#FFFFFF`, noir profond `#111214`.

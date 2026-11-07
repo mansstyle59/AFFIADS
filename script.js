@@ -42,11 +42,24 @@
     status.dataset.state = state;
   };
 
+  const submitButton = form.querySelector('button[type="submit"]');
   const turnstileElement = form.querySelector("#turnstile-widget");
   const turnstileStatus = form.querySelector("#turnstile-status");
   const siteKey = turnstileElement?.dataset.sitekey?.trim();
   const turnstileConfigured = Boolean(siteKey && siteKey !== "YOUR_TURNSTILE_SITE_KEY");
   let turnstileWidgetId = null;
+
+  // Éviter une soumission vouée à l’échec tant que la clé publique n’est pas configurée.
+  if (!turnstileConfigured) {
+    if (submitButton) {
+      submitButton.disabled = true;
+      submitButton.dataset.disabledReason = "setup";
+    }
+    setStatus(
+      "Le formulaire de devis sera activé après la configuration de la vérification anti-spam.",
+      "error"
+    );
+  }
   let turnstileLoadFailed = false;
 
   const setTurnstileStatus = (message, state = "") => {
@@ -96,7 +109,6 @@
 
     if (!form.reportValidity()) return;
 
-    const submitButton = form.querySelector('button[type="submit"]');
     const originalButtonText = submitButton ? submitButton.innerHTML : "";
     const formData = new FormData(form);
     const payload = Object.fromEntries(formData.entries());
@@ -142,7 +154,7 @@
         try { window.turnstile.reset(turnstileWidgetId); } catch { /* Le widget peut déjà être réinitialisé. */ }
       }
       if (submitButton) {
-        submitButton.disabled = false;
+        submitButton.disabled = !turnstileConfigured;
         submitButton.innerHTML = originalButtonText;
       }
     }

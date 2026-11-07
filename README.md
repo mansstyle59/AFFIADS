@@ -53,6 +53,7 @@ Le domaine expéditeur doit être vérifié dans Resend. Ces paramètres ne sont
 - Méthode POST uniquement (route Cloudflare Pages Function).
 - Validation côté navigateur et côté serveur.
 - Limites de longueur des champs et validation des valeurs autorisées.
+- Taille du corps de requête limitée à 16 Ko, contrôlée avant et pendant la lecture.
 - Champ honeypot anti-spam.
 - Secrets uniquement dans les variables Cloudflare.
 - Réponses d’erreur génériques, sans divulguer les détails du fournisseur.

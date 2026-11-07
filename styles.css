@@ -302,3 +302,13 @@ h3 { font-size: 1.45rem; line-height: 1.25; font-weight: 750; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
 }
+
+/* AFFIADS official brand mark */
+.brand-mark-image {
+  display: block;
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
+  border-radius: 9px;
+  object-fit: contain;
+}

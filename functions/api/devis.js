@@ -1,5 +1,5 @@
 const MAX_REQUEST_BYTES = 16 * 1024;
-const RATE_LIMIT_RETRY_SECONDS = 60;
+const TURNSTILE_TOKEN_MAX_LENGTH = 2048;
 
 const MAX_LENGTHS = {
   name: 100,
@@ -27,13 +27,12 @@ const BUDGETS = new Set([
   "Plus de 6 000 €"
 ]);
 
-function jsonResponse(payload, status, extraHeaders = {}) {
+function jsonResponse(payload, status) {
   return new Response(JSON.stringify(payload), {
     status,
     headers: {
       "content-type": "application/json; charset=utf-8",
-      "cache-control": "no-store",
-      ...extraHeaders
+      "cache-control": "no-store"
     }
   });
 }
@@ -100,21 +99,28 @@ function validEmail(email) {
   return email.length <= MAX_LENGTHS.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
-async function enforceQuoteRateLimit(request, env) {
-  const limiter = env && env.QUOTE_RATE_LIMITER;
-  const clientIp = request.headers.get("cf-connecting-ip");
-
-  // Cloudflare injecte cette adresse sur les requêtes proxifiées. Ne pas contourner
-  // le limiteur si le binding ou l'identifiant client manque : refuser temporairement.
-  if (!limiter || typeof limiter.limit !== "function" || !clientIp) {
-    return { allowed: false, unavailable: true };
+async function verifyTurnstile(token, secret, expectedHostname) {
+  if (!token || token.length > TURNSTILE_TOKEN_MAX_LENGTH) {
+    return { valid: false, unavailable: false };
   }
 
   try {
-    const { success } = await limiter.limit({ key: "quote:" + clientIp });
-    return { allowed: success === true, unavailable: false };
+    const response = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ secret, response: token })
+    });
+
+    if (!response.ok) return { valid: false, unavailable: true };
+    const result = await response.json();
+    const hostnameMatches = !expectedHostname || result.hostname === expectedHostname;
+
+    return {
+      valid: result.success === true && result.action === "quote" && hostnameMatches,
+      unavailable: false
+    };
   } catch {
-    return { allowed: false, unavailable: true };
+    return { valid: false, unavailable: true };
   }
 }
 
@@ -122,20 +128,6 @@ export async function onRequestPost({ request, env }) {
   const contentType = request.headers.get("content-type") || "";
   if (!contentType.toLowerCase().includes("application/json")) {
     return jsonResponse({ ok: false, message: "Format de demande non pris en charge." }, 415);
-  }
-
-  const rateLimit = await enforceQuoteRateLimit(request, env);
-  if (rateLimit.unavailable) {
-    return jsonResponse({
-      ok: false,
-      message: "Le formulaire est temporairement indisponible. Merci de réessayer ultérieurement."
-    }, 503);
-  }
-  if (!rateLimit.allowed) {
-    return jsonResponse({
-      ok: false,
-      message: "Trop de demandes depuis votre réseau. Veuillez réessayer dans une minute."
-    }, 429, { "retry-after": String(RATE_LIMIT_RETRY_SECONDS) });
   }
 
   let data;
@@ -166,6 +158,31 @@ export async function onRequestPost({ request, env }) {
 
   if (!name || !validEmail(email) || !PROJECT_TYPES.has(projectType) || !BUDGETS.has(budget) || message.length < 10) {
     return jsonResponse({ ok: false, message: "Vérifiez les champs obligatoires puis réessayez." }, 400);
+  }
+
+  const turnstileSecret = env.TURNSTILE_SECRET_KEY;
+  if (!turnstileSecret) {
+    return jsonResponse({ ok: false, message: "La protection anti-spam n’est pas encore configurée." }, 503);
+  }
+
+  const turnstileToken = cleanSingleLine(data["cf-turnstile-response"], TURNSTILE_TOKEN_MAX_LENGTH);
+  const turnstile = await verifyTurnstile(
+    turnstileToken,
+    turnstileSecret,
+    env.TURNSTILE_EXPECTED_HOSTNAME
+  );
+
+  if (turnstile.unavailable) {
+    return jsonResponse({
+      ok: false,
+      message: "La vérification anti-spam est momentanément indisponible. Réessayez plus tard."
+    }, 503);
+  }
+  if (!turnstile.valid) {
+    return jsonResponse({
+      ok: false,
+      message: "Veuillez valider la vérification anti-spam puis réessayer."
+    }, 400);
   }
 
   const apiKey = env.RESEND_API_KEY;

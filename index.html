@@ -198,13 +198,13 @@
         <form class="quote-form" id="quote-form" action="#" method="post">
           <div class="form-heading"><div><span class="form-kicker">Demande de devis</span><h3>Parlons de votre projet</h3></div><span class="form-required">* Champs requis</span></div>
           <div class="form-row">
-            <label>Votre nom <span>*</span><input name="name" autocomplete="name" required maxlength="100" placeholder="Nom et prénom"></label>
-            <label>Votre e-mail <span>*</span><input name="email" type="email" autocomplete="email" required maxlength="254" placeholder="vous@entreprise.fr"></label>
+            <label>Votre nom <span>*</span><input name="name" autocomplete="name" required maxlength="100" placeholder="Nom et prénom" disabled></label>
+            <label>Votre e-mail <span>*</span><input name="email" type="email" autocomplete="email" required maxlength="254" placeholder="vous@entreprise.fr" disabled></label>
           </div>
-          <label>Entreprise <small>(facultatif)</small><input name="company" autocomplete="organization" maxlength="120" placeholder="Nom de votre entreprise"></label>
+          <label>Entreprise <small>(facultatif)</small><input name="company" autocomplete="organization" maxlength="120" placeholder="Nom de votre entreprise" disabled></label>
           <div class="form-row">
             <label>Votre projet <span>*</span>
-              <select name="projectType" required>
+              <select name="projectType" required disabled>
                 <option value="">Choisir une expertise</option>
                 <option value="Site vitrine essentiel">Site vitrine essentiel</option>
                 <option value="Site vitrine avancé">Site vitrine avancé</option>
@@ -215,7 +215,7 @@
               </select>
             </label>
             <label>Budget envisagé <small>(facultatif)</small>
-              <select name="budget">
+              <select name="budget" disabled>
                 <option value="À définir">À définir</option>
                 <option value="Moins de 1 000 €">Moins de 1 000 €</option>
                 <option value="1 000 à 3 000 €">1 000 à 3 000 €</option>
@@ -224,8 +224,8 @@
               </select>
             </label>
           </div>
-          <label>Votre besoin <span>*</span><textarea name="message" required minlength="10" maxlength="4000" rows="4" placeholder="Quelques mots sur votre projet, vos objectifs ou vos difficultés…"></textarea></label>
-          <div class="form-trap" aria-hidden="true"><label>Ne pas remplir<input name="website" tabindex="-1" autocomplete="off"></label></div>
+          <label>Votre besoin <span>*</span><textarea name="message" required minlength="10" maxlength="4000" rows="4" placeholder="Quelques mots sur votre projet, vos objectifs ou vos difficultés…" disabled></textarea></label>
+          <div class="form-trap" aria-hidden="true"><label>Ne pas remplir<input name="website" tabindex="-1" autocomplete="off" disabled></label></div>
           <div class="form-unavailable" role="status">
             <strong>Demande de devis temporairement indisponible</strong>
             <p>Le formulaire sera activé lorsque le service sécurisé de traitement des demandes sera configuré. Vous pourrez alors nous transmettre votre projet en toute sécurité.</p>

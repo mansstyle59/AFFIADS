@@ -20,6 +20,16 @@
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; scroll-padding-top: 92px; }
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  inset-inline: 0;
+  height: var(--safe-top);
+  z-index: 110;
+  pointer-events: none;
+  background: var(--ink);
+}
 body {
   margin: 0;
   color: var(--ink);
@@ -212,6 +222,7 @@ h3 { font-size: 1.45rem; line-height: 1.25; font-weight: 750; }
   .contact-grid { gap: 44px; }
 }
 @media (max-width: 760px) {
+  .site-header { padding-top: calc(var(--safe-top) + 28px); }
   html { scroll-padding-top: 76px; }
   .container { width: min(var(--container), calc(100% - 36px)); }
   .section { padding: 78px 0; }

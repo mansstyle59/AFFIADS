@@ -56,8 +56,10 @@ def main():
     js_path = ROOT / "script.js"
     icon_path = ROOT / "apple-touch-icon.png"
     workflow_path = ROOT / ".github" / "workflows" / "pages.yml"
+    privacy_path = ROOT / "confidentialite.html"
+    legal_path = ROOT / "mentions-legales.html"
 
-    for path in (index_path, css_path, js_path, icon_path, workflow_path):
+    for path in (index_path, css_path, js_path, icon_path, workflow_path, privacy_path, legal_path):
         require(path.is_file(), f"fichier requis présent : {path.relative_to(ROOT)}")
 
     html = index_path.read_text(encoding="utf-8")
@@ -101,6 +103,48 @@ def main():
     require(not absolute_resources, "ressources locales compatibles avec le sous-répertoire GitHub Pages")
     require(not missing_resources, "ressources locales référencées présentes")
 
+    # Les pages juridiques sont contrôlées elles aussi, et pas seulement l'accueil.
+    for page_path in (privacy_path, legal_path):
+        page_html = page_path.read_text(encoding="utf-8")
+        page_parser = SiteParser()
+        page_parser.feed(page_html)
+        page_name = page_path.name
+
+        require('lang="fr"' in page_html, f"{page_name} déclaré en français")
+        require("<title>" in page_html and "</title>" in page_html,
+                f"titre présent dans {page_name}")
+        require('name="description"' in page_html,
+                f"meta description présente dans {page_name}")
+
+        page_duplicates = [
+            item for item, count in Counter(page_parser.ids).items() if count > 1
+        ]
+        require(not page_duplicates, f"identifiants uniques dans {page_name}")
+
+        page_broken_fragments = sorted(
+            set(page_parser.fragments).difference(page_parser.ids)
+        )
+        require(not page_broken_fragments,
+                f"liens d'ancrage internes valides dans {page_name}")
+
+        page_missing_resources = []
+        page_absolute_resources = []
+        for tag, attr, original, path in page_parser.resources:
+            if path.startswith("/"):
+                page_absolute_resources.append(original)
+            elif not (ROOT / path).is_file():
+                page_missing_resources.append(original)
+
+        require(not page_absolute_resources,
+                f"chemins relatifs compatibles dans {page_name}")
+        require(not page_missing_resources,
+                f"ressources locales présentes dans {page_name}")
+
+    require('href="./confidentialite.html"' in html,
+            "l'accueil pointe vers la politique de confidentialité")
+    require('href="./mentions-legales.html"' in html,
+            "l'accueil pointe vers les mentions légales")
+
     required_services = (
         "Site vitrine essentiel",
         "Site vitrine avancé",
@@ -128,7 +172,9 @@ def main():
             "CSS responsive et prise en compte de la safe area iOS")
 
     require("cp index.html styles.css script.js apple-touch-icon.png _site/" in workflow,
-            "workflow limité aux quatre fichiers statiques autorisés")
+            "fichiers principaux inclus dans le déploiement statique")
+    require("cp confidentialite.html mentions-legales.html _site/" in workflow,
+            "pages juridiques incluses dans le déploiement GitHub Pages")
     require("path: _site" in workflow, "artefact GitHub Pages issu du dossier _site")
 
     print("\nAFFIADS : contrôles statiques terminés avec succès.")

@@ -1,0 +1,15 @@
+# Configuration Cloudflare Pages pour AFFIADS.
+# Ce fichier devient la source de vérité Pages lors de son activation.
+name = "affiads"
+pages_build_output_dir = "."
+compatibility_date = "2026-11-07"
+
+# Protection approximative du formulaire public de devis.
+# Vérifier que ce namespace_id est unique dans le compte Cloudflare.
+[[ratelimits]]
+name = "QUOTE_RATE_LIMITER"
+namespace_id = "20261107"
+
+  [ratelimits.simple]
+  limit = 5
+  period = 60

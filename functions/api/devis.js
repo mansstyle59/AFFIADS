@@ -1,4 +1,5 @@
 const MAX_REQUEST_BYTES = 16 * 1024;
+const RATE_LIMIT_RETRY_SECONDS = 60;
 
 const MAX_LENGTHS = {
   name: 100,
@@ -26,12 +27,13 @@ const BUDGETS = new Set([
   "Plus de 6 000 €"
 ]);
 
-function jsonResponse(payload, status) {
+function jsonResponse(payload, status, extraHeaders = {}) {
   return new Response(JSON.stringify(payload), {
     status,
     headers: {
       "content-type": "application/json; charset=utf-8",
-      "cache-control": "no-store"
+      "cache-control": "no-store",
+      ...extraHeaders
     }
   });
 }
@@ -98,10 +100,42 @@ function validEmail(email) {
   return email.length <= MAX_LENGTHS.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
+async function enforceQuoteRateLimit(request, env) {
+  const limiter = env && env.QUOTE_RATE_LIMITER;
+  const clientIp = request.headers.get("cf-connecting-ip");
+
+  // Cloudflare injecte cette adresse sur les requêtes proxifiées. Ne pas contourner
+  // le limiteur si le binding ou l'identifiant client manque : refuser temporairement.
+  if (!limiter || typeof limiter.limit !== "function" || !clientIp) {
+    return { allowed: false, unavailable: true };
+  }
+
+  try {
+    const { success } = await limiter.limit({ key: "quote:" + clientIp });
+    return { allowed: success === true, unavailable: false };
+  } catch {
+    return { allowed: false, unavailable: true };
+  }
+}
+
 export async function onRequestPost({ request, env }) {
   const contentType = request.headers.get("content-type") || "";
   if (!contentType.toLowerCase().includes("application/json")) {
     return jsonResponse({ ok: false, message: "Format de demande non pris en charge." }, 415);
+  }
+
+  const rateLimit = await enforceQuoteRateLimit(request, env);
+  if (rateLimit.unavailable) {
+    return jsonResponse({
+      ok: false,
+      message: "Le formulaire est temporairement indisponible. Merci de réessayer ultérieurement."
+    }, 503);
+  }
+  if (!rateLimit.allowed) {
+    return jsonResponse({
+      ok: false,
+      message: "Trop de demandes depuis votre réseau. Veuillez réessayer dans une minute."
+    }, 429, { "retry-after": String(RATE_LIMIT_RETRY_SECONDS) });
   }
 
   let data;

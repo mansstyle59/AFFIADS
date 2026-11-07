@@ -7,7 +7,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="AFFIADS">
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
   <meta name="description" content="AFFIADS accompagne les entreprises dans leur création digitale : sites vitrines, applications web, outils numériques et automatisations IA.">
   <meta property="og:type" content="website">
   <meta property="og:title" content="AFFIADS — Conseil IA & création digitale">
@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/styles.css?v=20261107-3">
+  <link rel="stylesheet" href="./styles.css?v=20261107-4">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -195,7 +195,7 @@
           <div class="contact-promise"><span class="promise-mark" aria-hidden="true">✦</span><span>Un premier échange pour cadrer votre besoin, sans engagement.</span></div>
         </div>
 
-        <form class="quote-form" id="quote-form" action="/api/devis" method="post">
+        <form class="quote-form" id="quote-form" action="#" method="post">
           <div class="form-heading"><div><span class="form-kicker">Demande de devis</span><h3>Parlons de votre projet</h3></div><span class="form-required">* Champs requis</span></div>
           <div class="form-row">
             <label>Votre nom <span>*</span><input name="name" autocomplete="name" required maxlength="100" placeholder="Nom et prénom"></label>
@@ -226,12 +226,12 @@
           </div>
           <label>Votre besoin <span>*</span><textarea name="message" required minlength="10" maxlength="4000" rows="4" placeholder="Quelques mots sur votre projet, vos objectifs ou vos difficultés…"></textarea></label>
           <div class="form-trap" aria-hidden="true"><label>Ne pas remplir<input name="website" tabindex="-1" autocomplete="off"></label></div>
-          <div class="turnstile-field">
-            <div id="turnstile-widget" data-sitekey="YOUR_TURNSTILE_SITE_KEY"></div>
-            <p class="turnstile-status" id="turnstile-status" role="status" aria-live="polite"></p>
+          <div class="form-unavailable" role="status">
+            <strong>Demande de devis temporairement indisponible</strong>
+            <p>Le formulaire sera activé lorsque le service sécurisé de traitement des demandes sera configuré. Vous pourrez alors nous transmettre votre projet en toute sécurité.</p>
           </div>
-          <button class="button button-primary form-submit" type="submit">Envoyer ma demande <span aria-hidden="true">↗</span></button>
-          <p class="form-privacy">Vos informations sont utilisées uniquement pour répondre à votre demande. <a href="#confidentialite">En savoir plus</a>.</p>
+          <button class="button button-primary form-submit" type="submit" disabled aria-disabled="true">Formulaire indisponible</button>
+          <p class="form-privacy">Aucune donnée ne sera transmise depuis cette version GitHub Pages. <a href="#confidentialite">En savoir plus</a>.</p>
           <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
         </form>
       </div>
@@ -256,6 +256,6 @@
     <div class="container footer-bottom"><span>© <span id="year">2026</span> AFFIADS. Tous droits réservés.</span><span>Conçu avec intention.</span></div>
   </footer>
 
-  <script src="/script.js?v=20261107-3" defer></script>
+  <script src="./script.js?v=20261107-4" defer></script>
 </body>
 </html>

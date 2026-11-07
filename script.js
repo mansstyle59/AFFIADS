@@ -109,6 +109,14 @@
 
     if (!form.reportValidity()) return;
 
+    if (!turnstileConfigured) {
+      setStatus(
+        "Le formulaire de devis sera activé après la configuration de la vérification anti-spam.",
+        "error"
+      );
+      return;
+    }
+
     const originalButtonText = submitButton ? submitButton.innerHTML : "";
     const formData = new FormData(form);
     const payload = Object.fromEntries(formData.entries());

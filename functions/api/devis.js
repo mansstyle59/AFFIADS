@@ -76,9 +76,22 @@ async function readJsonBody(request) {
   return JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(body));
 }
 
-function cleanString(value, maxLength) {
+// Les champs repris dans les en-têtes ou les valeurs de formulaire doivent rester sur une ligne.
+function cleanSingleLine(value, maxLength) {
   if (typeof value !== "string") return "";
-  return value.trim().slice(0, maxLength);
+  return value
+    .replace(/[\u0000-\u001F\u007F-\u009F\u2028\u2029]/g, "")
+    .trim()
+    .slice(0, maxLength);
+}
+
+// Le message peut conserver ses retours à la ligne, mais pas les caractères de contrôle invisibles.
+function cleanMessage(value, maxLength) {
+  if (typeof value !== "string") return "";
+  return value
+    .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F-\u009F]/g, "")
+    .trim()
+    .slice(0, maxLength);
 }
 
 function validEmail(email) {
@@ -106,16 +119,16 @@ export async function onRequestPost({ request, env }) {
   }
 
   // Honeypot anti-spam : répondre discrètement sans envoyer de message.
-  if (cleanString(data.website, 200)) {
+  if (cleanSingleLine(data.website, 200)) {
     return jsonResponse({ ok: true }, 200);
   }
 
-  const name = cleanString(data.name, MAX_LENGTHS.name);
-  const email = cleanString(data.email, MAX_LENGTHS.email);
-  const company = cleanString(data.company, MAX_LENGTHS.company);
-  const projectType = cleanString(data.projectType, MAX_LENGTHS.projectType);
-  const budget = cleanString(data.budget, MAX_LENGTHS.budget);
-  const message = cleanString(data.message, MAX_LENGTHS.message);
+  const name = cleanSingleLine(data.name, MAX_LENGTHS.name);
+  const email = cleanSingleLine(data.email, MAX_LENGTHS.email);
+  const company = cleanSingleLine(data.company, MAX_LENGTHS.company);
+  const projectType = cleanSingleLine(data.projectType, MAX_LENGTHS.projectType);
+  const budget = cleanSingleLine(data.budget, MAX_LENGTHS.budget);
+  const message = cleanMessage(data.message, MAX_LENGTHS.message);
 
   if (!name || !validEmail(email) || !PROJECT_TYPES.has(projectType) || !BUDGETS.has(budget) || message.length < 10) {
     return jsonResponse({ ok: false, message: "Vérifiez les champs obligatoires puis réessayez." }, 400);

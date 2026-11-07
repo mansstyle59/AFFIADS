@@ -3,6 +3,7 @@
 
 from collections import Counter
 from html.parser import HTMLParser
+import re
 from pathlib import Path
 from urllib.parse import urlsplit
 
@@ -103,6 +104,12 @@ def main():
 
     require("form-unavailable" in html and 'type="submit" disabled' in html,
             "formulaire de devis clairement désactivé tant que le backend n’est pas raccordé")
+    form_match = re.search(r'<form\\b[^>]*id="quote-form"[^>]*>(.*?)</form>', html, re.S)
+    require(form_match is not None and 'aria-disabled="true"' in form_match.group(0),
+            "formulaire de devis annoncé comme indisponible aux technologies d’assistance")
+    form_controls = re.findall(r'<(?:input|select|textarea)\\b([^>]*)>', form_match.group(1), re.I) if form_match else []
+    require(bool(form_controls) and all(re.search(r'\\bdisabled\\b', attrs, re.I) for attrs in form_controls),
+            "champs personnels et champ honeypot désactivés sans backend")
     require(".form-unavailable" in js and "preventDefault()" in js,
             "soumission du formulaire statique bloquée côté navigateur")
     require("RESEND_API_KEY" not in html and "RESEND_API_KEY" not in js,

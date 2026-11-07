@@ -1,3 +1,5 @@
+const MAX_REQUEST_BYTES = 16 * 1024;
+
 const MAX_LENGTHS = {
   name: 100,
   email: 254,
@@ -34,6 +36,46 @@ function jsonResponse(payload, status) {
   });
 }
 
+async function readJsonBody(request) {
+  const contentLength = request.headers.get("content-length");
+  if (contentLength !== null) {
+    const length = Number(contentLength);
+    if (!Number.isSafeInteger(length) || length < 0) {
+      throw new Error("INVALID_CONTENT_LENGTH");
+    }
+    if (length > MAX_REQUEST_BYTES) {
+      throw new Error("BODY_TOO_LARGE");
+    }
+  }
+
+  if (!request.body) throw new Error("EMPTY_BODY");
+
+  const reader = request.body.getReader();
+  const chunks = [];
+  let totalBytes = 0;
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+
+    totalBytes += value.byteLength;
+    if (totalBytes > MAX_REQUEST_BYTES) {
+      try { await reader.cancel(); } catch { /* Le flux est déjà interrompu. */ }
+      throw new Error("BODY_TOO_LARGE");
+    }
+    chunks.push(value);
+  }
+
+  const body = new Uint8Array(totalBytes);
+  let offset = 0;
+  for (const chunk of chunks) {
+    body.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+
+  return JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(body));
+}
+
 function cleanString(value, maxLength) {
   if (typeof value !== "string") return "";
   return value.trim().slice(0, maxLength);
@@ -51,8 +93,11 @@ export async function onRequestPost({ request, env }) {
 
   let data;
   try {
-    data = await request.json();
-  } catch {
+    data = await readJsonBody(request);
+  } catch (error) {
+    if (error && error.message === "BODY_TOO_LARGE") {
+      return jsonResponse({ ok: false, message: "La demande est trop volumineuse." }, 413);
+    }
     return jsonResponse({ ok: false, message: "La demande reçue est invalide." }, 400);
   }
 

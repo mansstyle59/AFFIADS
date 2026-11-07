@@ -304,3 +304,34 @@ h3 { font-size: 1.45rem; line-height: 1.25; font-weight: 750; }
   border-radius: 9px;
   object-fit: contain;
 }
+
+
+/* iPhone / PWA (PAW) : éviter les surfaces floutées et préserver la netteté */
+@media (max-width: 760px) {
+  .floating-card {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background: #1b2737;
+  }
+
+  .hero-glow {
+    filter: none;
+    opacity: .08;
+  }
+}
+
+/* iOS Safari et mode installé : rendu stable, sans blur/transparence */
+@supports (-webkit-touch-callout: none) {
+  .site-header,
+  .navigation {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    background-color: #101827 !important;
+  }
+
+  .floating-card {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    background: #1b2737 !important;
+  }
+}

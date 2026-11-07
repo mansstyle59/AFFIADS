@@ -105,7 +105,8 @@ def main():
     require("form-unavailable" in html and 'type="submit" disabled' in html,
             "formulaire de devis clairement désactivé tant que le backend n’est pas raccordé")
     form_match = re.search(r'<form\b[^>]*id="quote-form"[^>]*>(.*?)</form>', html, re.S)
-    require(form_match is not None and 'aria-disabled="true"' in form_match.group(0),
+    form_opening = re.search(r'<form\\b[^>]*id="quote-form"[^>]*>', html, re.S)
+    require(form_opening is not None and 'aria-disabled="true"' in form_opening.group(0),
             "formulaire de devis annoncé comme indisponible aux technologies d’assistance")
     form_controls = re.findall(r'<(?:input|select|textarea)\b([^>]*)>', form_match.group(1), re.I) if form_match else []
     require(bool(form_controls) and all(re.search(r'\bdisabled\b', attrs, re.I) for attrs in form_controls),

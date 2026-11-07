@@ -197,6 +197,7 @@ h3 { font-size: 1.45rem; line-height: 1.25; font-weight: 750; }
 .form-status[data-state="error"] { color: #a33b37; }
 .form-submit[disabled] { opacity: .65; cursor: wait; transform: none; }
 .form-submit[disabled][data-disabled-reason="setup"] { opacity: .55; cursor: not-allowed; }
+.quote-form :is(input, select, textarea):disabled { color: #687386; background: #eef1f5; border-color: #d9dee6; cursor: not-allowed; opacity: .78; }
 .form-trap { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; }
 .turnstile-field { min-width: 0; margin: 0 0 16px; }
 #turnstile-widget { max-width: 100%; }

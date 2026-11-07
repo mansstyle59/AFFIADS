@@ -305,33 +305,39 @@ h3 { font-size: 1.45rem; line-height: 1.25; font-weight: 750; }
   object-fit: contain;
 }
 
-
-/* iPhone / PWA (PAW) : éviter les surfaces floutées et préserver la netteté */
-@media (max-width: 760px) {
-  .floating-card {
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
-    background: #1b2737;
-  }
-
-  .hero-glow {
-    filter: none;
-    opacity: .08;
-  }
-}
-
-/* iOS Safari et mode installé : rendu stable, sans blur/transparence */
+/* iOS Safari / PAW: surfaces nettes, sans verre dépoli */
 @supports (-webkit-touch-callout: none) {
   .site-header,
   .navigation {
     -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
-    background-color: #101827 !important;
+    background: #101827 !important;
   }
 
   .floating-card {
     -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
     background: #1b2737 !important;
+  }
+
+  .hero-glow {
+    filter: none !important;
+    opacity: .08;
+  }
+}
+
+/* En mode application installée, la zone de statut reste opaque. */
+@media (display-mode: standalone) {
+  html,
+  body {
+    background-color: #101827;
+  }
+
+  body::before {
+    background-color: #101827;
+  }
+
+  .site-header {
+    background-color: #101827;
   }
 }

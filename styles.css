@@ -78,11 +78,6 @@ h3 { font-size: 1.45rem; line-height: 1.25; font-weight: 750; }
 .brand { display: inline-flex; align-items: center; gap: 11px; flex-shrink: 0; }
 .brand-name { font-family: "Manrope", sans-serif; font-size: 1.12rem; font-weight: 800; letter-spacing: .08em; }
 .brand-dot { color: var(--accent); }
-.brand-mark { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; }
-.brand-mark span { position: absolute; display: block; width: 10px; height: 10px; border: 2px solid var(--accent); border-radius: 3px; transform: rotate(45deg); }
-.brand-mark span:nth-child(1) { left: 2px; top: 3px; }
-.brand-mark span:nth-child(2) { right: 2px; top: 3px; border-color: var(--blue); }
-.brand-mark span:nth-child(3) { left: 9px; bottom: 2px; background: var(--accent); border-color: var(--accent); }
 .navigation { display: flex; align-items: center; gap: 34px; color: #c5ceda; font-size: .9rem; font-weight: 600; }
 .navigation a:not(.nav-cta):hover { color: var(--white); }
 .nav-cta { display: inline-flex; align-items: center; gap: 12px; padding: 11px 17px; color: var(--ink); background: var(--accent); border-radius: 999px; }
@@ -107,10 +102,7 @@ h3 { font-size: 1.45rem; line-height: 1.25; font-weight: 750; }
 .orbit-outer { width: min(430px, 95%); aspect-ratio: 1; }
 .orbit-inner { width: min(330px, 74%); aspect-ratio: 1; border-color: rgba(183,243,107,.2); transform: rotate(34deg); }
 .visual-core { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 210px; height: 210px; border: 1px solid rgba(255,255,255,.2); border-radius: 50%; background: radial-gradient(circle at 35% 25%, #2b3b50, #151f2e 68%); box-shadow: 0 0 70px rgba(109,60,245,.14), inset 0 0 36px rgba(255,255,255,.04); }
-.core-symbol { display: flex; align-items: center; gap: 6px; height: 36px; margin-bottom: 10px; }
-.core-symbol span { display: block; width: 12px; height: 27px; border-radius: 4px; background: var(--accent); transform: skew(-16deg); }
-.core-symbol span:nth-child(2) { height: 36px; background: var(--blue); }
-.core-symbol span:nth-child(3) { height: 20px; }
+.core-brand-icon { display: block; width: 54px; height: 54px; margin-bottom: 10px; border-radius: 14px; }
 .visual-core p { margin: 0; font: 800 1rem "Manrope", sans-serif; letter-spacing: .16em; }
 .visual-core small { margin-top: 3px; color: #8392a6; font-size: .63rem; letter-spacing: .1em; text-transform: uppercase; }
 .floating-card { position: absolute; z-index: 2; display: flex; align-items: center; gap: 12px; padding: 15px 17px; border: 1px solid rgba(255,255,255,.13); border-radius: 15px; background: rgba(27, 39, 55, .88); box-shadow: 0 16px 40px rgba(0,0,0,.16); backdrop-filter: blur(12px); }

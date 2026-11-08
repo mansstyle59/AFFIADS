@@ -19,20 +19,35 @@ const payload = {
   "cf-turnstile-response": "token-test"
 };
 
-function makeRequest() {
+function makeRequest(contentType = "application/json") {
   return new Request("https://affiads.pages.dev/api/devis", {
     method: "POST",
-    headers: { "content-type": "application/json" },
+    headers: { "content-type": contentType },
     body: JSON.stringify(payload)
   });
 }
 
-async function callHandler(env) {
-  return onRequestPost({ request: makeRequest(), env });
+async function callHandler(env, contentType) {
+  return onRequestPost({ request: makeRequest(contentType), env });
 }
 
 const originalFetch = globalThis.fetch;
 try {
+  // 0) Refuser les faux media types JSON tout en acceptant les paramètres MIME.
+  let fetchCalls = 0;
+  globalThis.fetch = async () => {
+    fetchCalls += 1;
+    throw new Error("fetch should not be called for unsupported media types");
+  };
+  const jsonp = await callHandler({}, "application/jsonp");
+  assert.equal(jsonp.status, 415);
+  const nestedJson = await callHandler({}, "text/application/json");
+  assert.equal(nestedJson.status, 415);
+  const jsonWithCharset = await callHandler({ TURNSTILE_SECRET_KEY: "test-secret" }, "application/json; charset=utf-8");
+  assert.equal(jsonWithCharset.status, 503); // Le type MIME est accepté, puis la config hostname manque.
+  assert.equal(fetchCalls, 0);
+  console.log("OK — Content-Type strict : faux media types rejetés, charset JSON accepté");
+
   // 1) Configuration hostname absente : refus immédiat, aucun appel externe.
   let fetchCalls = 0;
   globalThis.fetch = async () => {

@@ -127,7 +127,8 @@ async function verifyTurnstile(token, secret, expectedHostname) {
 
 export async function onRequestPost({ request, env }) {
   const contentType = request.headers.get("content-type") || "";
-  if (!contentType.toLowerCase().includes("application/json")) {
+  const mediaType = contentType.split(";", 1)[0].trim().toLowerCase();
+  if (mediaType !== "application/json") {
     return jsonResponse({ ok: false, message: "Format de demande non pris en charge." }, 415);
   }
 

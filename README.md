@@ -77,6 +77,7 @@ Le domaine expéditeur doit être vérifié dans Resend. Ces paramètres ne sont
 ## Protection et validation
 
 - Méthode POST uniquement (route Cloudflare Pages Function).
+- Contrôle strict du media type `application/json` (paramètres MIME comme `charset` tolérés ; autres types rejetés en HTTP 415).
 - Validation côté navigateur et côté serveur.
 - Limites de longueur des champs et validation des valeurs autorisées.
 - Taille du corps de requête limitée à 16 Ko, contrôlée avant et pendant la lecture.

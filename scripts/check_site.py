@@ -278,9 +278,16 @@ def main():
     require("TURNSTILE_EXPECTED_HOSTNAME" in api
             and "if (!expectedHostname || !/^[a-z0-9.-]+$/.test(expectedHostname))" in api,
             "hostname Turnstile de production obligatoire : échec fermé si absent ou invalide")
+    require('const mediaType = contentType.split(";", 1)[0].trim().toLowerCase();' in api
+            and 'if (mediaType !== "application/json")' in api,
+            "Content-Type limité au media type application/json, avec paramètres MIME tolérés")
     require("typeof result.hostname === \"string\"" in api
             and "result.hostname.toLowerCase().replace(/\\.$/, \"\") === expectedHostname" in api,
             "hostname Turnstile renvoyé par Cloudflare comparé exactement après normalisation")
+    api_tests = api_test_path.read_text(encoding="utf-8")
+    require("application/jsonp" in api_tests and "text/application/json" in api_tests
+            and "application/json; charset=utf-8" in api_tests,
+            "tests couvrant les media types JSON incorrects et le charset valide")
     require("node scripts/test_devis.mjs" in workflow,
             "tests fonctionnels de la Cloudflare Pages Function exécutés dans CI")
 

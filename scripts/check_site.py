@@ -99,6 +99,11 @@ def main():
     parser = SiteParser()
     parser.feed(html)
 
+    require(
+        "img" in parser.attributes.get(("div", "role"), [])
+        and "Illustration abstraite d'un écosystème digital" in parser.attributes.get(("div", "aria-label"), []),
+        "illustration du hero possède un nom accessible avec role=img"
+    )
     require('lang="fr"' in html, "document déclaré en français")
     require("<title>" in html and "</title>" in html, "titre SEO présent")
     require('name="description"' in html, "meta description présente")

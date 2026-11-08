@@ -51,6 +51,28 @@ def require(condition, message):
     print(f"OK — {message}")
 
 
+def relative_luminance(hex_color):
+    """Calculate WCAG relative luminance for a six-digit sRGB color."""
+    value = hex_color.lstrip("#")
+    if not re.fullmatch(r"[0-9a-fA-F]{6}", value):
+        raise ValueError(f"Couleur hexadécimale invalide : {hex_color}")
+    channels = [int(value[index:index + 2], 16) / 255 for index in (0, 2, 4)]
+    linear = [
+        channel / 12.92 if channel <= 0.04045
+        else ((channel + 0.055) / 1.055) ** 2.4
+        for channel in channels
+    ]
+    return sum(channel * weight for channel, weight in zip(linear, (0.2126, 0.7152, 0.0722)))
+
+
+def contrast_ratio(foreground, background):
+    """Return the WCAG contrast ratio between two sRGB colors."""
+    first = relative_luminance(foreground)
+    second = relative_luminance(background)
+    lighter, darker = max(first, second), min(first, second)
+    return (lighter + 0.05) / (darker + 0.05)
+
+
 def main():
     index_path = ROOT / "index.html"
     css_path = ROOT / "styles.css"
@@ -80,6 +102,21 @@ def main():
     require("<title>" in html and "</title>" in html, "titre SEO présent")
     require('name="description"' in html, "meta description présente")
 
+    # WCAG AA contrast checks for visible text and keyboard focus.
+    require("--muted: #626b78" in css
+            and contrast_ratio("#626b78", "#edf1f5") >= 4.5,
+            "texte secondaire lisible sur le fond contact (WCAG AA 4.5:1)")
+    require("--muted-strong: #667085" in css
+            and contrast_ratio("#667085", "#ffffff") >= 4.5
+            and contrast_ratio("#667085", "#fbfcfd") >= 4.5,
+            "petits textes et placeholders lisibles sur les champs et cartes (WCAG AA 4.5:1)")
+    require("--muted-soft: #596678" in css
+            and contrast_ratio("#596678", "#e5eaf0") >= 4.5,
+            "texte de la note de confidentialité lisible sur son fond (WCAG AA 4.5:1)")
+    require("--focus-ring: #5c53ff" in css
+            and all(contrast_ratio("#5c53ff", background) >= 3.0
+                    for background in ("#ffffff", "#f7f7fa", "#edf1f5", "#111214", "#101827", "#172233", "#ffc12e")),
+            "indicateur de focus clavier contrasté sur les surfaces claires, sombres et accentuées (WCAG 3:1)")
     require("fonts.googleapis.com" not in html and "fonts.gstatic.com" not in html,
             "aucune police externe Google Fonts chargée par la page d’accueil")
     require("--font-body:" in css and "--font-heading:" in css

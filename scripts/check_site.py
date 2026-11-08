@@ -99,7 +99,7 @@ def main():
     require(manifest.get("display") == "standalone", "manifest prévu pour l’affichage autonome")
     require(manifest.get("start_url") == "./index.html" and manifest.get("scope") == "./",
             "start_url et scope relatifs au sous-répertoire GitHub Pages")
-    require(manifest.get("theme_color") == "#101827" and manifest.get("background_color") == "#111214",
+    require(manifest.get("theme_color") == "#101827" and manifest.get("background_color") == manifest.get("theme_color"),
             "couleurs PWA cohérentes avec l’identité AFFIADS")
     manifest_icons = manifest.get("icons", [])
     require(any(icon.get("src") == "./assets/brand/affiads-icon.svg" and icon.get("sizes") == "any"

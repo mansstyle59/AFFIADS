@@ -40,7 +40,7 @@ jobs:
       - name: Prepare static site
         run: |
           mkdir -p _site
-          cp index.html styles.css script.js apple-touch-icon.png manifest.webmanifest _site/
+          cp index.html styles.css script.js apple-touch-icon.png manifest.webmanifest sitemap.xml _site/
           cp confidentialite.html mentions-legales.html _site/
           mkdir -p _site/assets/brand
           cp assets/brand/*.svg _site/assets/brand/

@@ -83,10 +83,11 @@ def main():
     privacy_path = ROOT / "confidentialite.html"
     legal_path = ROOT / "mentions-legales.html"
     manifest_path = ROOT / "manifest.webmanifest"
+    sitemap_path = ROOT / "sitemap.xml"
     api_path = ROOT / "functions" / "api" / "devis.js"
     api_test_path = ROOT / "scripts" / "test_devis.mjs"
 
-    for path in (index_path, css_path, js_path, icon_path, workflow_path, privacy_path, legal_path, manifest_path, api_path, api_test_path):
+    for path in (index_path, css_path, js_path, icon_path, workflow_path, privacy_path, legal_path, manifest_path, sitemap_path, api_path, api_test_path):
         require(path.is_file(), f"fichier requis présent : {path.relative_to(ROOT)}")
 
     html = index_path.read_text(encoding="utf-8")
@@ -226,6 +227,31 @@ def main():
             "URL Open Graph cohérente avec l’URL canonique")
     require('name="twitter:card" content="summary"' in html,
             "carte de partage Twitter/X configurée")
+
+    # Sitemap XML : URLs canoniques du site AFFIADS sous son chemin GitHub Pages.
+    sitemap_namespace = "{http://www.sitemaps.org/schemas/sitemap/0.9}"
+    try:
+        sitemap_root = ElementTree.parse(sitemap_path).getroot()
+    except ElementTree.ParseError:
+        require(False, "sitemap.xml est un XML valide")
+        sitemap_root = None
+
+    require(sitemap_root is not None and sitemap_root.tag == sitemap_namespace + "urlset",
+            "sitemap.xml utilise le namespace officiel")
+    sitemap_locations = [
+        node.text.strip()
+        for node in (sitemap_root.findall(sitemap_namespace + "url/" + sitemap_namespace + "loc")
+                     if sitemap_root is not None else [])
+        if node.text
+    ]
+    expected_sitemap_urls = {
+        canonical_url,
+        canonical_url + "confidentialite.html",
+        canonical_url + "mentions-legales.html",
+    }
+    require(set(sitemap_locations) == expected_sitemap_urls
+            and len(sitemap_locations) == len(expected_sitemap_urls),
+            "sitemap.xml contient les trois URLs canoniques AFFIADS, sans doublons")
 
     required_ids = {"accueil", "contenu", "services", "exemples", "approche", "contact", "confidentialite"}
     missing_ids = required_ids.difference(parser.ids)

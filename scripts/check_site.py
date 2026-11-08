@@ -374,7 +374,7 @@ def main():
     require("@media" in css and "--safe-top" in css,
             "CSS responsive et prise en compte de la safe area iOS")
 
-    require("cp index.html styles.css script.js apple-touch-icon.png manifest.webmanifest _site/" in workflow,
+    require("cp index.html styles.css script.js apple-touch-icon.png manifest.webmanifest sitemap.xml _site/" in workflow,
             "fichiers principaux et manifest inclus dans le déploiement statique")
     require("cp confidentialite.html mentions-legales.html _site/" in workflow,
             "pages juridiques incluses dans le déploiement GitHub Pages")

@@ -311,8 +311,17 @@ def main():
     form_opening = re.search(r'<form\b[^>]*id="quote-form"[^>]*>', html, re.S)
     require(form_opening is not None and 'action="./api/devis"' in form_opening.group(0),
             "formulaire prêt à cibler la Cloudflare Pages Function /api/devis")
-    require(form_opening is not None and 'aria-disabled="true"' in form_opening.group(0),
-            "formulaire de devis annoncé comme indisponible aux technologies d’assistance")
+    form_label_ids = parser.attributes.get(("form", "aria-labelledby"), [])
+    form_description_ids = parser.attributes.get(("form", "aria-describedby"), [])
+    require(form_opening is not None
+            and "quote-form-title" in form_label_ids
+            and "quote-form-title" in parser.ids,
+            "formulaire de devis possède un nom accessible relié à son titre visible")
+    require(form_opening is not None
+            and "form-unavailable" in form_description_ids
+            and "form-unavailable" in parser.ids
+            and 'aria-disabled="true"' not in form_opening.group(0),
+            "formulaire décrit son indisponibilité sans aria-disabled non pris en charge sur le rôle form")
     form_controls = re.findall(r'<(?:input|select|textarea)\b([^>]*)>', form_match.group(1), re.I) if form_match else []
     require(bool(form_controls) and all(re.search(r'\bdisabled\b', attrs, re.I) for attrs in form_controls),
             "champs personnels et champ honeypot désactivés sans backend")

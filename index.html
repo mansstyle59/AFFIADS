@@ -278,8 +278,8 @@
           <div class="contact-promise"><span class="promise-mark" aria-hidden="true">✦</span><span>Un premier échange pour cadrer votre besoin, sans engagement.</span></div>
         </div>
 
-        <form class="quote-form" id="quote-form" action="./api/devis" method="post" aria-disabled="true">
-          <div class="form-heading"><div><span class="form-kicker">Demande de devis</span><h3>Parlons de votre projet</h3></div><span class="form-required">* Champs requis</span></div>
+        <form class="quote-form" id="quote-form" action="./api/devis" method="post" aria-labelledby="quote-form-title" aria-describedby="form-unavailable">
+          <div class="form-heading"><div><span class="form-kicker">Demande de devis</span><h3 id="quote-form-title">Parlons de votre projet</h3></div><span class="form-required">* Champs requis</span></div>
           <div class="form-row">
             <label>Votre nom <span>*</span><input name="name" autocomplete="name" required maxlength="100" placeholder="Nom et prénom" disabled></label>
             <label>Votre e-mail <span>*</span><input name="email" type="email" autocomplete="email" required maxlength="254" placeholder="vous@entreprise.fr" disabled></label>
@@ -309,7 +309,7 @@
           </div>
           <label>Votre besoin <span>*</span><textarea name="message" required minlength="10" maxlength="4000" rows="4" placeholder="Quelques mots sur votre projet, vos objectifs ou vos difficultés…" disabled></textarea></label>
           <div class="form-trap" aria-hidden="true"><label>Ne pas remplir<input name="website" tabindex="-1" autocomplete="off" disabled></label></div>
-          <div class="form-unavailable" role="status">
+          <div class="form-unavailable" id="form-unavailable" role="status">
             <strong>Demande de devis temporairement indisponible</strong>
             <p>Le formulaire sera activé lorsque le service sécurisé de traitement des demandes sera configuré. Vous pourrez alors nous transmettre votre projet en toute sécurité.</p>
           </div>

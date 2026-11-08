@@ -281,6 +281,10 @@ h3 { font-size: 1.45rem; line-height: 1.25; font-weight: 750; }
 .quote-form input, .quote-form select, .quote-form textarea { display: block; width: 100%; min-width: 0; margin-top: 8px; padding: 13px 14px; color: var(--ink); border: 1px solid #dfe5ec; border-radius: 11px; outline: none; background: #fbfcfd; font-size: .87rem; font-weight: 400; transition: border-color .2s ease, box-shadow .2s ease; }
 .quote-form input::placeholder, .quote-form textarea::placeholder { color: var(--muted-strong); }
 .quote-form input:focus, .quote-form select:focus, .quote-form textarea:focus { border-color: #6d3cf5; box-shadow: 0 0 0 3px rgba(255,193,46,.20); }
+.quote-form input:focus-visible, .quote-form select:focus-visible, .quote-form textarea:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 3px;
+}
 .quote-form textarea { resize: vertical; min-height: 110px; }
 .form-submit { width: 100%; margin-top: 3px; border: 0; }
 .form-privacy { margin: 13px 0 0; color: var(--muted-strong); font-size: .72rem; line-height: 1.6; }

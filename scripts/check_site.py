@@ -111,7 +111,7 @@ def main():
     require('name="twitter:card" content="summary"' in html,
             "carte de partage Twitter/X configurée")
 
-    required_ids = {"accueil", "contenu", "services", "approche", "contact", "confidentialite"}
+    required_ids = {"accueil", "contenu", "services", "exemples", "approche", "contact", "confidentialite"}
     missing_ids = required_ids.difference(parser.ids)
     require(not missing_ids, f"sections principales présentes : {sorted(required_ids)}")
 
@@ -182,6 +182,12 @@ def main():
         "Automatisation IA",
     )
     require(all(service in html for service in required_services), "les cinq prestations AFFIADS sont présentées")
+    require("Concepts fictifs" in html and "ni des clients" in html and "ni des réalisations livrées" in html,
+            "exemples de démonstration clairement distingués de réalisations client")
+    require("workflow-steps" in html and "Validation humaine" in html,
+            "schéma d’automatisation IA avec validation humaine présenté")
+    require(".concept-grid" in css and ".workflow-steps" in css,
+            "styles responsive des exemples et du schéma présents")
 
     require("form-unavailable" in html and 'type="submit" disabled' in html,
             "formulaire de devis clairement désactivé tant que le backend n’est pas raccordé")

@@ -106,6 +106,11 @@ def main():
     require("--muted: #626b78" in css
             and contrast_ratio("#626b78", "#edf1f5") >= 4.5,
             "texte secondaire lisible sur le fond contact (WCAG AA 4.5:1)")
+    require("--muted-on-dark: #aeb9c8" in css
+            and ".service-card-ai .service-number, .service-card-ai .service-tag { color: var(--muted-on-dark); }" in css
+            and contrast_ratio("#aeb9c8", "#111214") >= 4.5
+            and contrast_ratio("#aeb9c8", "#172233") >= 4.5,
+            "numéros et tags de la carte IA gardent un contraste AA sur fond sombre")
     require("--muted-strong: #667085" in css
             and contrast_ratio("#667085", "#ffffff") >= 4.5
             and contrast_ratio("#667085", "#fbfcfd") >= 4.5,

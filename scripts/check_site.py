@@ -83,6 +83,9 @@ def main():
             and "font-family: var(--font-body)" in css
             and "font-family: var(--font-heading)" in css,
             "polices système centralisées dans des variables CSS")
+    require("body, button, input, select, textarea { font-family: var(--font-body); }" in css
+            and "body, button, input, select, textarea { font-family: \"DM Sans\"" not in css,
+            "texte et contrôles utilisent la pile de polices système sans ancienne surcharge")
     privacy_html = privacy_path.read_text(encoding="utf-8")
     require("n’importe plus de polices depuis Google Fonts" in privacy_html
             and "fonts.googleapis.com" in privacy_html,

@@ -91,13 +91,21 @@ def main():
             and "fonts.googleapis.com" in privacy_html,
             "politique de confidentialité cohérente avec le retrait des polices distantes")
 
+    stylesheet_versions = []
     for page_path in (index_path, privacy_path, legal_path):
         page_html = page_path.read_text(encoding="utf-8")
         page_name = page_path.name
+        stylesheet_match = re.search(r'href="\\./styles\\.css\\?v=([^"]+)"', page_html)
+        require(stylesheet_match is not None, f"version de cache CSS présente dans {page_name}")
+        if stylesheet_match:
+            stylesheet_versions.append(stylesheet_match.group(1))
         require('rel="manifest" href="./manifest.webmanifest"' in page_html,
                 f"manifest PWA lié dans {page_name}")
         require('name="apple-mobile-web-app-capable" content="yes"' in page_html,
                 f"mode application iOS déclaré dans {page_name}")
+
+    require(len(stylesheet_versions) == 3 and len(set(stylesheet_versions)) == 1,
+            "version de cache CSS identique sur la page d’accueil et les pages juridiques")
 
     require(manifest.get("display") == "standalone", "manifest prévu pour l’affichage autonome")
     require(manifest.get("start_url") == "./index.html" and manifest.get("scope") == "./",

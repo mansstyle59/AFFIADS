@@ -105,7 +105,7 @@ h3 { font-size: 1.45rem; line-height: 1.25; font-weight: 750; }
 .orbit-inner { width: min(330px, 74%); aspect-ratio: 1; border-color: rgba(183,243,107,.2); transform: rotate(34deg); }
 .visual-core { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 210px; height: 210px; border: 1px solid rgba(255,255,255,.2); border-radius: 50%; background: radial-gradient(circle at 35% 25%, #2b3b50, #151f2e 68%); box-shadow: 0 0 70px rgba(109,60,245,.14), inset 0 0 36px rgba(255,255,255,.04); }
 .core-brand-icon { display: block; width: 54px; height: 54px; margin-bottom: 10px; border-radius: 14px; }
-.visual-core p { margin: 0; font: 800 1rem "Manrope", sans-serif; letter-spacing: .16em; }
+.visual-core p { margin: 0; font: 800 1rem var(--font-heading); letter-spacing: .16em; }
 .visual-core small { margin-top: 3px; color: #8392a6; font-size: .63rem; letter-spacing: .1em; text-transform: uppercase; }
 .floating-card { position: absolute; z-index: 2; display: flex; align-items: center; gap: 12px; padding: 15px 17px; border: 1px solid rgba(255,255,255,.13); border-radius: 15px; background: rgba(27, 39, 55, .88); box-shadow: 0 16px 40px rgba(0,0,0,.16); backdrop-filter: blur(12px); }
 .floating-card strong, .floating-card small { display: block; }
@@ -169,7 +169,7 @@ h3 { font-size: 1.45rem; line-height: 1.25; font-weight: 750; }
 .preview-site-nav span { color: #8994a2; font-size: .48rem; }
 .preview-site-hero { padding: 19px 16px 17px; color: #fff; background: linear-gradient(125deg, #18283b, #3b376f); }
 .preview-site-hero small { display: block; margin-bottom: 8px; color: #ffd45d; font-size: .48rem; letter-spacing: .1em; }
-.preview-site-hero strong { display: block; font: 800 1.12rem/1.12 "Manrope", sans-serif; letter-spacing: -.04em; }
+.preview-site-hero strong { display: block; font: 800 1.12rem/1.12 var(--font-heading); letter-spacing: -.04em; }
 .preview-lines { display: grid; gap: 5px; margin: 10px 0; }
 .preview-lines i { display: block; width: 75%; height: 3px; border-radius: 4px; background: rgba(255,255,255,.28); }
 .preview-lines i:last-child { width: 52%; }

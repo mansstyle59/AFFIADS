@@ -262,7 +262,7 @@ h3 { font-size: 1.45rem; line-height: 1.25; font-weight: 750; }
 .step-arrow { color: #718198; font-size: 1.3rem; }
 
 /* Contact */
-.contact { overflow: hidden; background: #edf1f5; }
+.contact { background: #edf1f5; }
 .contact-grid { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); align-items: start; gap: 80px; }
 .contact-copy { position: sticky; top: 130px; }
 .contact-copy h2 { margin-bottom: 24px; }

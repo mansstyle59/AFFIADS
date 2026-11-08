@@ -126,6 +126,10 @@ def main():
             and all(contrast_ratio("#5c53ff", background) >= 3.0
                     for background in ("#ffffff", "#f7f7fa", "#edf1f5", "#111214", "#101827", "#172233", "#ffc12e")),
             "indicateur de focus clavier contrasté sur les surfaces claires, sombres et accentuées (WCAG 3:1)")
+    require(".contact { background: #edf1f5; }" in css
+            and ".contact-copy { position: sticky; top: 130px; }" in css
+            and re.search(r"\.contact\s*\{[^}]*overflow\s*:\s*(?:hidden|auto|scroll)", css, re.S) is None,
+            "sidebar contact sticky non bloquée par un overflow ancestor")
     require(re.search(
         r"\.quote-form input:focus-visible\s*,\s*\.quote-form select:focus-visible\s*,\s*\.quote-form textarea:focus-visible\s*\{\s*outline:\s*3px solid var\(--focus-ring\);\s*outline-offset:\s*3px",
         css

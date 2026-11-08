@@ -378,8 +378,8 @@ def main():
             "fichiers principaux et manifest inclus dans le déploiement statique")
     require("cp confidentialite.html mentions-legales.html _site/" in workflow,
             "pages juridiques incluses dans le déploiement GitHub Pages")
-    require("manifest.webmanifest _site/" in workflow,
-            "manifest PWA inclus dans l’artefact GitHub Pages")
+    require("manifest.webmanifest sitemap.xml _site/" in workflow,
+            "manifest PWA et sitemap inclus dans l’artefact GitHub Pages")
     require("path: _site" in workflow, "artefact GitHub Pages issu du dossier _site")
 
     print("\nAFFIADS : contrôles statiques terminés avec succès.")

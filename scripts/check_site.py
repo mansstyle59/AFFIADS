@@ -95,6 +95,9 @@ def main():
                 for icon in manifest_icons), "icône SVG officielle présente dans le manifest")
     require(any(icon.get("src") == "./apple-touch-icon.png" and icon.get("sizes") == "180x180"
                 for icon in manifest_icons), "icône iOS PNG présente dans le manifest")
+    require(any(icon.get("src") == "./assets/brand/affiads-icon-maskable.svg"
+                and icon.get("sizes") == "any" and icon.get("purpose") == "maskable"
+                for icon in manifest_icons), "icône PWA maskable dédiée présente dans le manifest")
     for icon in manifest_icons:
         icon_path = urlsplit(icon.get("src", "")).path
         require(bool(icon_path) and not icon_path.startswith("/") and (ROOT / icon_path).is_file(),

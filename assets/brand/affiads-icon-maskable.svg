@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">AFFIADS — icône PWA maskable</title>
+  <defs>
+    <linearGradient id="brand-gradient" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#4D4AFF"/>
+      <stop offset="1" stop-color="#713CF4"/>
+    </linearGradient>
+  </defs>
+  <!-- Fond plein : les systèmes maskable peuvent rogner les coins. -->
+  <rect width="512" height="512" fill="url(#brand-gradient)"/>
+  <!-- Logo officiel réduit dans la zone de sécurité centrale. -->
+  <g transform="translate(60 116) scale(.64)">
+    <path d="M164 158.5c0-24.5 26.8-39.3 47.8-26.4l149.7 92.2c21.1 13 21.1 43.7 0 56.7l-149.7 92.2c-21 12.9-47.8-1.9-47.8-26.4V158.5Z" fill="#fff"/>
+    <circle cx="372" cy="140" r="76" fill="#fff"/>
+    <circle cx="372" cy="140" r="52" fill="#FFC12E"/>
+  </g>
+</svg>

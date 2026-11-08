@@ -46,6 +46,8 @@ Le projet AFFIADS n’est pas encore présent parmi les projets Pages du compte 
 
 Le formulaire envoie les demandes à une Cloudflare Pages Function, qui utilise l’API Resend pour notifier le propriétaire. Aucun secret n’est stocké dans le dépôt.
 
+Le formulaire utilise `action="./api/devis"`, qui cible `/api/devis` lorsque Cloudflare Pages publie le site à la racine. Sur GitHub Pages (site hébergé sous `/AFFIADS/`), le formulaire reste désactivé : les Pages Functions Cloudflare n’y sont pas exécutées. Ne pas retirer les attributs `disabled` ni le message d’indisponibilité avant d’avoir configuré et testé le projet Cloudflare Pages.
+
 ### Protection anti-spam Cloudflare Turnstile
 
 Turnstile est une solution gratuite de Cloudflare adaptée aux formulaires Pages. La vérification serveur est obligatoire : un widget côté navigateur seul ne protège pas l’endpoint.

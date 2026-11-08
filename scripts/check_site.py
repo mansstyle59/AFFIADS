@@ -182,6 +182,8 @@ def main():
 
     require("form-unavailable" in html and 'type="submit" disabled' in html,
             "formulaire de devis clairement désactivé tant que le backend n’est pas raccordé")
+    require(form_opening is not None and 'action="./api/devis"' in form_opening.group(0),
+            "formulaire prêt à cibler la Cloudflare Pages Function /api/devis")
     form_match = re.search(r'<form\b[^>]*id="quote-form"[^>]*>(.*?)</form>', html, re.S)
     form_opening = re.search(r'<form\b[^>]*id="quote-form"[^>]*>', html, re.S)
     require(form_opening is not None and 'aria-disabled="true"' in form_opening.group(0),

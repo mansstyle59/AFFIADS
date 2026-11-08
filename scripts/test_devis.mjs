@@ -49,7 +49,7 @@ try {
   console.log("OK — Content-Type strict : faux media types rejetés, charset JSON accepté");
 
   // 1) Configuration hostname absente : refus immédiat, aucun appel externe.
-  let fetchCalls = 0;
+  fetchCalls = 0;
   globalThis.fetch = async () => {
     fetchCalls += 1;
     throw new Error("fetch should not be called when hostname config is missing");

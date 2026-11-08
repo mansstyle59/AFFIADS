@@ -119,6 +119,9 @@ def main():
     require("--muted-soft: #596678" in css
             and contrast_ratio("#596678", "#e5eaf0") >= 4.5,
             "texte de la note de confidentialité lisible sur son fond (WCAG AA 4.5:1)")
+    require("color: var(--muted); background: #eef1f5" in css
+            and contrast_ratio("#626b78", "#eef1f5") >= 4.5,
+            "texte des champs désactivés suffisamment contrasté (WCAG AA 4.5:1)")
     require("--focus-ring: #5c53ff" in css
             and all(contrast_ratio("#5c53ff", background) >= 3.0
                     for background in ("#ffffff", "#f7f7fa", "#edf1f5", "#111214", "#101827", "#172233", "#ffc12e")),

@@ -56,9 +56,9 @@ Turnstile est une solution gratuite de Cloudflare adaptée aux formulaires Pages
 2. Autoriser le hostname du site AFFIADS dans ce widget.
 3. Copier la clé publique (sitekey) dans index.html à la place de YOUR_TURNSTILE_SITE_KEY.
 4. Ajouter la clé secrète TURNSTILE_SECRET_KEY dans Cloudflare Pages → Settings → Variables and Secrets.
-5. Une fois le hostname de production connu, renseigner TURNSTILE_EXPECTED_HOSTNAME (par exemple le hostname Pages ou le domaine personnalisé exact).
+5. Renseigner obligatoirement TURNSTILE_EXPECTED_HOSTNAME avec le hostname exact de production (par exemple `affiads.pages.dev` ou le domaine personnalisé, sans protocole ni chemin).
 
-La Function vérifie le token avec l’API Siteverify de Cloudflare, exige une validation réussie et l’action quote. Si TURNSTILE_EXPECTED_HOSTNAME est défini, le hostname retourné doit aussi correspondre. La clé secrète ne doit jamais être placée dans HTML, JavaScript client ou Git.
+La Function vérifie le token avec l’API Siteverify de Cloudflare, exige une validation réussie, l’action `quote` et une correspondance exacte du hostname retourné (comparaison insensible à la casse et normalisation d’un point final). Si TURNSTILE_EXPECTED_HOSTNAME est absent ou invalide, la Function refuse l’envoi avec HTTP 503. La clé secrète ne doit jamais être placée dans HTML, JavaScript client ou Git.
 
 Si la clé publique ou la clé secrète n’est pas configurée, l’envoi de devis est refusé avec une réponse explicite : le formulaire échoue fermé au lieu d’accepter les demandes sans protection.
 
@@ -83,7 +83,7 @@ Le domaine expéditeur doit être vérifié dans Resend. Ces paramètres ne sont
 - Champ honeypot anti-spam.
 - Nettoyage des caractères de contrôle dans les champs.
 - Validation serveur du token Turnstile avant tout envoi e-mail.
-- Vérification de l’action Turnstile quote et, si configuré, du hostname attendu.
+- Vérification de l’action Turnstile quote et du hostname de production obligatoire (échec fermé si la variable manque).
 - Aucun secret dans le dépôt.
 - Réponses d’erreur génériques, sans divulguer les détails du fournisseur.
 
@@ -102,7 +102,7 @@ Turnstile protège contre une partie des soumissions automatisées, mais ne remp
 - [ ] Créer le widget Turnstile et autoriser le hostname de production.
 - [ ] Remplacer YOUR_TURNSTILE_SITE_KEY dans index.html par la clé publique réelle.
 - [ ] Ajouter TURNSTILE_SECRET_KEY dans les variables secrètes Cloudflare.
-- [ ] Définir TURNSTILE_EXPECTED_HOSTNAME si le hostname de production est connu.
+- [ ] Définir obligatoirement TURNSTILE_EXPECTED_HOSTNAME avec le hostname exact de production.
 - [ ] Configurer les variables Resend dans Cloudflare Pages.
 - [ ] Envoyer une demande test et vérifier la réception par le propriétaire.
 - [ ] Tester les tokens Turnstile valides, expirés et invalides.

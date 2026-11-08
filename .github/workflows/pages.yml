@@ -29,6 +29,8 @@ jobs:
           python3 -m py_compile scripts/check_site.py
           python3 scripts/check_site.py
           node --check script.js
+          node --input-type=module --check < functions/api/devis.js
+          node scripts/test_devis.mjs
 
       - name: Configure Pages
         uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5

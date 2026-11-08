@@ -60,14 +60,17 @@ def main():
     privacy_path = ROOT / "confidentialite.html"
     legal_path = ROOT / "mentions-legales.html"
     manifest_path = ROOT / "manifest.webmanifest"
+    api_path = ROOT / "functions" / "api" / "devis.js"
+    api_test_path = ROOT / "scripts" / "test_devis.mjs"
 
-    for path in (index_path, css_path, js_path, icon_path, workflow_path, privacy_path, legal_path, manifest_path):
+    for path in (index_path, css_path, js_path, icon_path, workflow_path, privacy_path, legal_path, manifest_path, api_path, api_test_path):
         require(path.is_file(), f"fichier requis présent : {path.relative_to(ROOT)}")
 
     html = index_path.read_text(encoding="utf-8")
     css = css_path.read_text(encoding="utf-8")
     js = js_path.read_text(encoding="utf-8")
     workflow = workflow_path.read_text(encoding="utf-8")
+    api = api_path.read_text(encoding="utf-8")
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
 
     parser = SiteParser()
@@ -230,6 +233,14 @@ def main():
             "soumission du formulaire statique bloquée côté navigateur")
     require("RESEND_API_KEY" not in html and "RESEND_API_KEY" not in js,
             "aucune clé Resend exposée dans le frontend")
+    require("TURNSTILE_EXPECTED_HOSTNAME" in api
+            and "if (!expectedHostname || !/^[a-z0-9.-]+$/.test(expectedHostname))" in api,
+            "hostname Turnstile de production obligatoire : échec fermé si absent ou invalide")
+    require("typeof result.hostname === \"string\"" in api
+            and "result.hostname.toLowerCase().replace(/\\.$/, \"\") === expectedHostname" in api,
+            "hostname Turnstile renvoyé par Cloudflare comparé exactement après normalisation")
+    require("node scripts/test_devis.mjs" in workflow,
+            "tests fonctionnels de la Cloudflare Pages Function exécutés dans CI")
 
     require("@media" in css and "--safe-top" in css,
             "CSS responsive et prise en compte de la safe area iOS")

@@ -100,7 +100,7 @@ function validEmail(email) {
 }
 
 async function verifyTurnstile(token, secret, expectedHostname) {
-  if (!token || token.length > TURNSTILE_TOKEN_MAX_LENGTH) {
+  if (!token || token.length > TURNSTILE_TOKEN_MAX_LENGTH || !expectedHostname) {
     return { valid: false, unavailable: false };
   }
 
@@ -113,7 +113,8 @@ async function verifyTurnstile(token, secret, expectedHostname) {
 
     if (!response.ok) return { valid: false, unavailable: true };
     const result = await response.json();
-    const hostnameMatches = !expectedHostname || result.hostname === expectedHostname;
+    const hostnameMatches = typeof result.hostname === "string"
+      && result.hostname.toLowerCase().replace(/\.$/, "") === expectedHostname;
 
     return {
       valid: result.success === true && result.action === "quote" && hostnameMatches,
@@ -165,11 +166,23 @@ export async function onRequestPost({ request, env }) {
     return jsonResponse({ ok: false, message: "La protection anti-spam n’est pas encore configurée." }, 503);
   }
 
+  const expectedHostname = cleanSingleLine(env.TURNSTILE_EXPECTED_HOSTNAME, 253)
+    .toLowerCase()
+    .replace(/\.$/, "");
+
+  // Sans hostname de production explicite, ne jamais accepter une vérification Turnstile.
+  if (!expectedHostname || !/^[a-z0-9.-]+$/.test(expectedHostname)) {
+    return jsonResponse({
+      ok: false,
+      message: "Le hostname de vérification anti-spam n’est pas configuré."
+    }, 503);
+  }
+
   const turnstileToken = cleanSingleLine(data["cf-turnstile-response"], TURNSTILE_TOKEN_MAX_LENGTH);
   const turnstile = await verifyTurnstile(
     turnstileToken,
     turnstileSecret,
-    env.TURNSTILE_EXPECTED_HOSTNAME
+    expectedHostname
   );
 
   if (turnstile.unavailable) {

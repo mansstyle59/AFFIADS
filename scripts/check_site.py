@@ -95,7 +95,7 @@ def main():
     for page_path in (index_path, privacy_path, legal_path):
         page_html = page_path.read_text(encoding="utf-8")
         page_name = page_path.name
-        stylesheet_match = re.search(r'href="\\./styles\\.css\\?v=([^"]+)"', page_html)
+        stylesheet_match = re.search(r'href="\./styles\.css\?v=([^"]+)"', page_html)
         require(stylesheet_match is not None, f"version de cache CSS présente dans {page_name}")
         if stylesheet_match:
             stylesheet_versions.append(stylesheet_match.group(1))

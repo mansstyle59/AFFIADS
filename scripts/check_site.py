@@ -7,6 +7,7 @@ import json
 import re
 from pathlib import Path
 from urllib.parse import urlsplit
+from xml.etree import ElementTree
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -178,6 +179,33 @@ def main():
         icon_path = urlsplit(icon.get("src", "")).path
         require(bool(icon_path) and not icon_path.startswith("/") and (ROOT / icon_path).is_file(),
                 f"fichier d’icône PWA présent : {icon.get('src', '')}")
+
+    # Chaque SVG exposé comme image doit pointer aria-labelledby vers un ID réel.
+    svg_icon_paths = (
+        ROOT / "assets" / "brand" / "favicon.svg",
+        ROOT / "assets" / "brand" / "affiads-icon.svg",
+        ROOT / "assets" / "brand" / "affiads-icon-maskable.svg",
+    )
+    for svg_path in svg_icon_paths:
+        require(svg_path.is_file(), f"icône SVG présente : {svg_path.relative_to(ROOT)}")
+        try:
+            svg_root = ElementTree.parse(svg_path).getroot()
+        except ElementTree.ParseError:
+            require(False, f"SVG valide : {svg_path.relative_to(ROOT)}")
+            continue
+
+        labelled_by = svg_root.attrib.get("aria-labelledby", "").split()
+        svg_ids = {
+            element.attrib["id"]
+            for element in svg_root.iter()
+            if "id" in element.attrib
+        }
+        require(
+            svg_root.attrib.get("role") == "img"
+            and bool(labelled_by)
+            and all(label in svg_ids for label in labelled_by),
+            f"nom accessible SVG relié à un ID existant : {svg_path.relative_to(ROOT)}"
+        )
 
     canonical_url = "https://mansstyle59.github.io/AFFIADS/"
     require(f'<link rel="canonical" href="{canonical_url}">' in html,

@@ -40,8 +40,13 @@ function jsonResponse(payload, status) {
 async function readJsonBody(request) {
   const contentLength = request.headers.get("content-length");
   if (contentLength !== null) {
+    // HTTP Content-Length doit être une suite de chiffres décimaux (RFC 9110).
+    // Number() seul accepterait aussi des formes non conformes comme 1e2 ou 0x10.
+    if (!/^\d+$/.test(contentLength)) {
+      throw new Error("INVALID_CONTENT_LENGTH");
+    }
     const length = Number(contentLength);
-    if (!Number.isSafeInteger(length) || length < 0) {
+    if (!Number.isSafeInteger(length)) {
       throw new Error("INVALID_CONTENT_LENGTH");
     }
     if (length > MAX_REQUEST_BYTES) {

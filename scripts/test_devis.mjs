@@ -19,16 +19,18 @@ const payload = {
   "cf-turnstile-response": "token-test"
 };
 
-function makeRequest(contentType = "application/json") {
+function makeRequest(contentType = "application/json", contentLength) {
+  const headers = { "content-type": contentType };
+  if (contentLength !== undefined) headers["content-length"] = contentLength;
   return new Request("https://affiads.pages.dev/api/devis", {
     method: "POST",
-    headers: { "content-type": contentType },
+    headers,
     body: JSON.stringify(payload)
   });
 }
 
-async function callHandler(env, contentType) {
-  return onRequestPost({ request: makeRequest(contentType), env });
+async function callHandler(env, contentType, contentLength) {
+  return onRequestPost({ request: makeRequest(contentType, contentLength), env });
 }
 
 const originalFetch = globalThis.fetch;
@@ -47,6 +49,19 @@ try {
   assert.equal(jsonWithCharset.status, 503); // Le type MIME est accepté, puis la config hostname manque.
   assert.equal(fetchCalls, 0);
   console.log("OK — Content-Type strict : faux media types rejetés, charset JSON accepté");
+
+  // Content-Length doit suivre la syntaxe décimale HTTP, pas les coercitions JavaScript.
+  fetchCalls = 0;
+  globalThis.fetch = async () => {
+    fetchCalls += 1;
+    throw new Error("fetch should not be called for malformed Content-Length");
+  };
+  for (const malformedLength of ["1e2", "0x10", "1.5"]) {
+    const invalidLength = await callHandler({}, "application/json", malformedLength);
+    assert.equal(invalidLength.status, 400, `Content-Length invalide : ${malformedLength}`);
+  }
+  assert.equal(fetchCalls, 0);
+  console.log("OK — Content-Length non décimal rejeté avant tout appel externe");
 
   // 1) Configuration hostname absente : refus immédiat, aucun appel externe.
   fetchCalls = 0;

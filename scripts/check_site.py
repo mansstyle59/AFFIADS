@@ -77,6 +77,17 @@ def main():
     require("<title>" in html and "</title>" in html, "titre SEO présent")
     require('name="description"' in html, "meta description présente")
 
+    require("fonts.googleapis.com" not in html and "fonts.gstatic.com" not in html,
+            "aucune police externe Google Fonts chargée par la page d’accueil")
+    require("--font-body:" in css and "--font-heading:" in css
+            and "font-family: var(--font-body)" in css
+            and "font-family: var(--font-heading)" in css,
+            "polices système centralisées dans des variables CSS")
+    privacy_html = privacy_path.read_text(encoding="utf-8")
+    require("n’importe plus de polices depuis Google Fonts" in privacy_html
+            and "fonts.googleapis.com" in privacy_html,
+            "politique de confidentialité cohérente avec le retrait des polices distantes")
+
     for page_path in (index_path, privacy_path, legal_path):
         page_html = page_path.read_text(encoding="utf-8")
         page_name = page_path.name

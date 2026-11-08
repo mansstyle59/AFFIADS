@@ -182,7 +182,7 @@ def main():
         "Automatisation IA",
     )
     require(all(service in html for service in required_services), "les cinq prestations AFFIADS sont présentées")
-    require("Concepts fictifs" in html and "ni des clients" in html and "ni des réalisations livrées" in html,
+    require("concepts fictifs" in html and "ni des clients" in html and "ni des réalisations livrées" in html,
             "exemples de démonstration clairement distingués de réalisations client")
     require("workflow-steps" in html and "Validation humaine" in html,
             "schéma d’automatisation IA avec validation humaine présenté")

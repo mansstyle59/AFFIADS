@@ -468,3 +468,33 @@ h3 { font-size: 1.45rem; line-height: 1.25; font-weight: 750; }
   .footer-legal { width: 100%; order: 4; gap: 12px; }
   .legal-page .legal-header { padding-top: 36px; }
 }
+
+
+/* Refonte éditoriale AFFIADS — publics, confiance et parcours de contact */
+.audiences { background: #fff; }
+.audience-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.audience-card { position: relative; min-width: 0; min-height: 245px; padding: 25px 23px; border: 1px solid #e5e7ef; border-radius: 20px; background: #fbfbfd; transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
+.audience-card:hover { transform: translateY(-4px); border-color: #d5d1ff; box-shadow: 0 16px 40px rgba(16,24,39,.06); }
+.audience-index { display: block; margin-bottom: 35px; color: #5c53ff; font-size: .69rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.audience-card h3 { max-width: 250px; margin-bottom: 10px; font-size: 1.18rem; }
+.audience-card p { margin: 0; color: #626b78; font-size: .85rem; line-height: 1.75; }
+.audience-arrow { position: absolute; top: 20px; right: 20px; color: #9aa3af; font-size: 1rem; }
+.audience-note { display: flex; align-items: center; gap: 14px; margin-top: 20px; padding: 19px 22px; border: 1px solid #e5e2ff; border-radius: 16px; background: #f7f6ff; }
+.audience-note-icon { display: grid; place-items: center; flex: 0 0 34px; width: 34px; height: 34px; color: #5148ff; border-radius: 10px; background: #e9e6ff; }
+.audience-note p { flex: 1; margin: 0; color: #5e6878; font-size: .86rem; }
+.audience-note p strong { color: #252a35; }
+.audience-note .text-link { flex-shrink: 0; }
+.faq { background: #f7f7fa; }
+.faq-grid { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); gap: clamp(35px, 8vw, 110px); align-items: start; }
+.faq-intro h2 { margin-bottom: 18px; }
+.faq-intro > p:not(.eyebrow) { max-width: 320px; margin-bottom: 25px; color: #626b78; }
+.faq-list { border-top: 1px solid #dfe2e9; }
+.faq-list details { border-bottom: 1px solid #dfe2e9; }
+.faq-list summary { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 22px 0; color: #202633; font-size: 1rem; font-weight: 700; line-height: 1.5; cursor: pointer; list-style: none; }
+.faq-list summary::-webkit-details-marker { display: none; }
+.faq-list summary span { display: grid; place-items: center; flex: 0 0 28px; width: 28px; height: 28px; color: #5148ff; border: 1px solid #d9d5ff; border-radius: 50%; font-size: 1.2rem; font-weight: 400; transition: transform .2s ease; }
+.faq-list details[open] summary span { transform: rotate(45deg); }
+.faq-list details p { max-width: 680px; margin: -3px 42px 22px 0; color: #626b78; font-size: .9rem; line-height: 1.8; }
+.faq-list details a { color: #5148ff; text-decoration: underline; text-underline-offset: 3px; }
+@media (max-width: 1000px) { .audience-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .faq-grid { grid-template-columns: 1fr; gap: 35px; } }
+@media (max-width: 760px) { .audience-grid { grid-template-columns: 1fr; } .audience-card { min-height: 0; padding: 22px; } .audience-index { margin-bottom: 22px; } .audience-note { align-items: flex-start; flex-wrap: wrap; } .audience-note p { flex-basis: calc(100% - 50px); } .audience-note .text-link { margin-left: 48px; } .faq-list summary { padding: 19px 0; font-size: .92rem; } }

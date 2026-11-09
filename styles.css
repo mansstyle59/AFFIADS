@@ -551,3 +551,28 @@ h3 { font-size: 1.45rem; line-height: 1.25; font-weight: 750; }
   .glassy-label { font-size: .49rem; }
 }
 @media (prefers-reduced-motion: reduce) { .glassy-link { transition: none; } }
+
+/* Ajustement fidèle au prototype Glassy SideBar : bouton de menu mobile visible */
+@media (max-width: 760px) {
+  .menu-toggle {
+    display: inline-flex !important;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 54px;
+    height: 54px;
+    padding: 0;
+    border: 1px solid rgba(255,255,255,.16);
+    border-radius: 18px;
+    color: #f7f5ff;
+    background: #111827;
+  }
+  .menu-toggle span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    border-radius: 2px;
+    background: currentColor;
+  }
+}

@@ -4,7 +4,7 @@
   --bg:#0d111b;--bg-deep:#090c13;--surface:#151b29;--surface-soft:#1b2333;
   --ink:#f7f8fc;--muted:#aeb8c9;--muted-dark:#687386;--line:rgba(255,255,255,.12);
   --purple:#6048f5;--purple-light:#8878ff;--yellow:#ffca55;--blue:#69a8ff;
-  --container:1160px;--safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px);
+  --container:1180px;--safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px);
   --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Arial,sans-serif;
   --radius:22px;--shadow:0 22px 60px rgba(9,12,19,.12)
 }
@@ -30,7 +30,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
 .brand-dot{color:var(--yellow)}
 .brand small{display:block;margin-top:1px;color:#8d98ac;font-size:.62rem;font-weight:500;letter-spacing:0}
 /* Header: navigation vitrine horizontale, opaque */
-.site-header{position:sticky;top:0;z-index:100;padding-top:var(--safe-top);background:#0d111b;border-bottom:1px solid var(--line)}
+.site-header{position:sticky;top:0;z-index:100;padding-top:var(--safe-top);background:#0b0d14;border-bottom:1px solid var(--line)}
 .header-inner{min-height:84px;display:flex;align-items:center;justify-content:space-between;gap:24px}
 .main-navigation{display:flex;align-items:center;gap:clamp(16px,2.4vw,31px);font-size:.86rem;font-weight:650;color:#c1cad9}
 .main-navigation>a:not(.nav-cta):hover{color:#fff}

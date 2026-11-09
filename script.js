@@ -1,38 +1,28 @@
 (() => {
   "use strict";
 
-  const menuButton = document.querySelector(".menu-toggle");
-  const navigation = document.querySelector("#navigation");
   const form = document.querySelector("#quote-form");
   const status = document.querySelector("#form-status");
   const year = document.querySelector("#year");
 
   if (year) year.textContent = String(new Date().getFullYear());
 
-  if (menuButton && navigation) {
-    menuButton.addEventListener("click", () => {
-      const isOpen = menuButton.getAttribute("aria-expanded") === "true";
-      menuButton.setAttribute("aria-expanded", String(!isOpen));
-      menuButton.setAttribute("aria-label", isOpen ? "Ouvrir le menu" : "Fermer le menu");
-      navigation.classList.toggle("is-open", !isOpen);
-    });
-
-    navigation.querySelectorAll("a").forEach((link) => {
-      link.addEventListener("click", () => {
-        menuButton.setAttribute("aria-expanded", "false");
-        menuButton.setAttribute("aria-label", "Ouvrir le menu");
-        navigation.classList.remove("is-open");
+  // Synchronise l’élément actif avec les sections visibles.
+  const navLinks = [...document.querySelectorAll(".glassy-link")];
+  if ("IntersectionObserver" in window) {
+    const sections = navLinks
+      .map((link) => document.querySelector(link.getAttribute("href")))
+      .filter(Boolean);
+    const sectionObserver = new IntersectionObserver((entries) => {
+      const visible = entries
+        .filter((entry) => entry.isIntersecting)
+        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+      if (!visible) return;
+      navLinks.forEach((link) => {
+        link.classList.toggle("is-active", link.getAttribute("href") === "#" + visible.target.id);
       });
-    });
-
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape" && navigation.classList.contains("is-open")) {
-        menuButton.setAttribute("aria-expanded", "false");
-        menuButton.setAttribute("aria-label", "Ouvrir le menu");
-        navigation.classList.remove("is-open");
-        menuButton.focus();
-      }
-    });
+    }, { rootMargin: "-20% 0px -55% 0px", threshold: [0, .15, .35, .6] });
+    sections.forEach((section) => sectionObserver.observe(section));
   }
 
   if (!form || !status) return;

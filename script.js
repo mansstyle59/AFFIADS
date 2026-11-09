@@ -1,170 +1,28 @@
 (() => {
   "use strict";
-
-  const form = document.querySelector("#quote-form");
-  const status = document.querySelector("#form-status");
   const year = document.querySelector("#year");
-
   if (year) year.textContent = String(new Date().getFullYear());
 
-  // Synchronise l’élément actif avec les sections visibles.
-  const navLinks = [...document.querySelectorAll(".glassy-link")];
-  if ("IntersectionObserver" in window) {
-    const sections = navLinks
-      .map((link) => document.querySelector(link.getAttribute("href")))
-      .filter(Boolean);
-    const sectionObserver = new IntersectionObserver((entries) => {
-      const visible = entries
-        .filter((entry) => entry.isIntersecting)
-        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-      if (!visible) return;
-      navLinks.forEach((link) => {
-        link.classList.toggle("is-active", link.getAttribute("href") === "#" + visible.target.id);
-      });
-    }, { rootMargin: "-20% 0px -55% 0px", threshold: [0, .15, .35, .6] });
-    sections.forEach((section) => sectionObserver.observe(section));
-  }
-
-  if (!form || !status) return;
-
-  // GitHub Pages ne prend pas en charge les Pages Functions Cloudflare.
-  // Tant qu’aucun backend n’est raccordé, ne collecter ni transmettre de donnée personnelle.
-  const pagesFormNotice = form.querySelector(".form-unavailable");
-  if (pagesFormNotice) {
-    const button = form.querySelector('button[type="submit"]');
-    if (button) button.disabled = true;
-    form.addEventListener("submit", (event) => event.preventDefault());
-    return;
-  }
-
-  const setStatus = (message, state) => {
-    status.textContent = message;
-    status.dataset.state = state;
-  };
-
-  const submitButton = form.querySelector('button[type="submit"]');
-  const turnstileElement = form.querySelector("#turnstile-widget");
-  const turnstileStatus = form.querySelector("#turnstile-status");
-  const siteKey = turnstileElement?.dataset.sitekey?.trim();
-  const turnstileConfigured = Boolean(siteKey && siteKey !== "YOUR_TURNSTILE_SITE_KEY");
-  let turnstileWidgetId = null;
-
-  // Éviter une soumission vouée à l’échec tant que la clé publique n’est pas configurée.
-  if (!turnstileConfigured) {
-    if (submitButton) {
-      submitButton.disabled = true;
-      submitButton.dataset.disabledReason = "setup";
-    }
-    setStatus(
-      "Le formulaire de devis sera activé après la configuration de la vérification anti-spam.",
-      "error"
-    );
-  }
-  let turnstileLoadFailed = false;
-
-  const setTurnstileStatus = (message, state = "") => {
-    if (!turnstileStatus) return;
-    turnstileStatus.textContent = message;
-    turnstileStatus.dataset.state = state;
-  };
-
-  if (turnstileConfigured) {
-    const turnstileScript = document.createElement("script");
-    turnstileScript.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
-    turnstileScript.async = true;
-    turnstileScript.defer = true;
-    turnstileScript.onload = () => {
-      if (!window.turnstile) {
-        turnstileLoadFailed = true;
-        setTurnstileStatus("La vérification anti-spam n’a pas pu charger. Rechargez la page.", "error");
-        return;
-      }
-
-      try {
-        turnstileWidgetId = window.turnstile.render(turnstileElement, {
-          sitekey: siteKey,
-          action: "quote",
-          size: "flexible",
-          callback: () => setTurnstileStatus("", ""),
-          "expired-callback": () => setTurnstileStatus("La vérification a expiré. Recommencez.", "error"),
-          "error-callback": () => {
-            turnstileLoadFailed = true;
-            setTurnstileStatus("La vérification est indisponible. Rechargez la page ou réessayez.", "error");
-          }
-        });
-      } catch {
-        turnstileLoadFailed = true;
-        setTurnstileStatus("La vérification anti-spam n’a pas pu démarrer. Rechargez la page.", "error");
-      }
+  const toggle = document.querySelector(".menu-toggle");
+  const nav = document.querySelector("#main-navigation");
+  if (toggle && nav) {
+    const closeMenu = () => {
+      nav.classList.remove("is-open");
+      toggle.setAttribute("aria-expanded", "false");
+      toggle.setAttribute("aria-label", "Ouvrir le menu");
     };
-    turnstileScript.onerror = () => {
-      turnstileLoadFailed = true;
-      setTurnstileStatus("La vérification anti-spam n’a pas pu charger. Rechargez la page.", "error");
-    };
-    document.head.appendChild(turnstileScript);
+    toggle.addEventListener("click", () => {
+      const open = !nav.classList.contains("is-open");
+      nav.classList.toggle("is-open", open);
+      toggle.setAttribute("aria-expanded", String(open));
+      toggle.setAttribute("aria-label", open ? "Fermer le menu" : "Ouvrir le menu");
+    });
+    nav.querySelectorAll('a[href^="#"]').forEach((link) => link.addEventListener("click", closeMenu));
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closeMenu();
+    });
+    document.addEventListener("click", (event) => {
+      if (!nav.contains(event.target) && !toggle.contains(event.target)) closeMenu();
+    });
   }
-
-  form.addEventListener("submit", async (event) => {
-    event.preventDefault();
-
-    if (!form.reportValidity()) return;
-
-    if (!turnstileConfigured) {
-      setStatus(
-        "Le formulaire de devis sera activé après la configuration de la vérification anti-spam.",
-        "error"
-      );
-      return;
-    }
-
-    const originalButtonText = submitButton ? submitButton.innerHTML : "";
-    const formData = new FormData(form);
-    const payload = Object.fromEntries(formData.entries());
-
-    if (turnstileConfigured && !payload["cf-turnstile-response"]) {
-      setStatus(
-        turnstileLoadFailed
-          ? "La vérification anti-spam n’est pas disponible. Rechargez la page puis réessayez."
-          : "Veuillez valider la vérification anti-spam avant d’envoyer votre demande.",
-        "error"
-      );
-      return;
-    }
-
-    if (submitButton) {
-      submitButton.disabled = true;
-      submitButton.textContent = "Envoi en cours…";
-    }
-    setStatus("", "");
-
-    try {
-      const response = await fetch(form.action, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "Accept": "application/json" },
-        body: JSON.stringify(payload)
-      });
-
-      const result = await response.json().catch(() => ({}));
-
-      if (!response.ok || !result.ok) {
-        throw new Error(result.message || "L’envoi n’a pas pu aboutir. Réessayez un peu plus tard.");
-      }
-
-      form.reset();
-      setStatus("Merci ! Votre demande a bien été envoyée. AFFIADS reviendra vers vous.", "success");
-    } catch (error) {
-      const message = error && error.message
-        ? error.message
-        : "Une erreur est survenue. Veuillez réessayer plus tard.";
-      setStatus(message, "error");
-    } finally {
-      if (turnstileConfigured && turnstileWidgetId !== null && window.turnstile) {
-        try { window.turnstile.reset(turnstileWidgetId); } catch { /* Le widget peut déjà être réinitialisé. */ }
-      }
-      if (submitButton) {
-        submitButton.disabled = !turnstileConfigured;
-        submitButton.innerHTML = originalButtonText;
-      }
-    }
-  });
 })();

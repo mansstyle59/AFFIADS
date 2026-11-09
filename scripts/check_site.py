@@ -45,7 +45,7 @@ def main():
     require("--container:1180px" in css and "grid-template-columns" in css and "minmax(0,1fr)" in css,"grilles adaptatives")
     require("fonts.googleapis.com" not in html and "fonts.gstatic.com" not in html,"aucune police distante Google Fonts")
     require("Site vitrine" in html and "Application web" in html and "Automatisation IA" in html and "Conseil digital" in html,"expertises principales AFFIADS présentées")
-    require("indépendants" in html and "TPE" in html and "porteur de projet" in html,"public cible identifié")
+    require("indépendants" in html and "TPE" in html and "porteurs de projet" in html,"public cible identifié")
     require("mailto:affiadspro@gmail.com" in html,"contact direct fonctionnel")
     require("CONCEPT" in html and "pas des réalisations clients" in html,"concepts clairement distingués de références clients")
     require("Validation humaine" in html,"présence du principe de validation humaine pour l’IA")

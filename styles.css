@@ -498,3 +498,56 @@ h3 { font-size: 1.45rem; line-height: 1.25; font-weight: 750; }
 .faq-list details a { color: #5148ff; text-decoration: underline; text-underline-offset: 3px; }
 @media (max-width: 1000px) { .audience-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .faq-grid { grid-template-columns: 1fr; gap: 35px; } }
 @media (max-width: 760px) { .audience-grid { grid-template-columns: 1fr; } .audience-card { min-height: 0; padding: 22px; } .audience-index { margin-bottom: 22px; } .audience-note { align-items: flex-start; flex-wrap: wrap; } .audience-note p { flex-basis: calc(100% - 50px); } .audience-note .text-link { margin-left: 48px; } .faq-list summary { padding: 19px 0; font-size: .92rem; } }
+
+/* Glassy SideBar — navigation AFFIADS inspirée de la référence */
+:root {
+  --glassy-purple: #7546f5;
+  --glassy-border: rgba(255, 255, 255, .9);
+  --glassy-shadow: 0 14px 42px rgba(62, 44, 117, .14), 0 3px 10px rgba(50, 39, 85, .07);
+}
+.glassy-nav {
+  position: fixed; z-index: 105; top: 50%; left: max(14px, env(safe-area-inset-left));
+  display: flex; flex-direction: column; gap: 7px; width: 72px; padding: 10px;
+  transform: translateY(-50%); border: 1px solid var(--glassy-border);
+  border-radius: 28px; background: #f4efff; box-shadow: var(--glassy-shadow);
+}
+.glassy-link {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 3px; min-height: 58px; padding: 8px 4px; border-radius: 19px;
+  color: #707084; text-align: center;
+  transition: color .2s ease, background .2s ease, box-shadow .2s ease, transform .2s ease;
+}
+.glassy-link:hover { color: #4c3b9b; background: rgba(255,255,255,.72); }
+.glassy-link:active { transform: scale(.96); }
+.glassy-link.is-active {
+  color: #fff; background: linear-gradient(145deg, #8b5cff, #6538e9);
+  box-shadow: 0 5px 15px rgba(104, 62, 238, .35), inset 0 1px 1px rgba(255,255,255,.35);
+}
+.glassy-icon { display: grid; place-items: center; width: 28px; height: 27px; font-size: 1.25rem; line-height: 1; }
+.glassy-label { font-size: .57rem; font-weight: 650; line-height: 1.15; letter-spacing: -.01em; }
+@media (min-width: 761px) {
+  body { padding-left: 96px; }
+  .menu-toggle { display: none !important; }
+}
+@media (max-width: 760px) {
+  body { padding-left: 0; padding-bottom: calc(96px + var(--safe-bottom)); }
+  .site-header { padding-top: var(--safe-top); }
+  .header-inner { min-height: 64px; }
+  .menu-toggle { display: none !important; }
+  .glassy-nav {
+    top: auto; right: max(10px, env(safe-area-inset-right));
+    bottom: calc(10px + var(--safe-bottom)); left: max(10px, env(safe-area-inset-left));
+    flex-direction: row; justify-content: space-between; gap: 4px; width: auto; padding: 7px;
+    transform: none; border-radius: 25px; background: #f4efff;
+  }
+  .glassy-link { flex: 1 1 0; min-width: 0; min-height: 58px; padding: 7px 2px; border-radius: 18px; }
+  .glassy-icon { width: 25px; height: 24px; font-size: 1.15rem; }
+  .glassy-label { font-size: clamp(.52rem, 2.4vw, .65rem); }
+  html { scroll-padding-top: calc(var(--safe-top) + 80px); scroll-padding-bottom: 110px; }
+}
+@media (max-width: 360px) {
+  .glassy-nav { gap: 2px; padding: 5px; }
+  .glassy-link { min-height: 54px; }
+  .glassy-label { font-size: .49rem; }
+}
+@media (prefers-reduced-motion: reduce) { .glassy-link { transition: none; } }

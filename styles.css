@@ -576,3 +576,10 @@ h3 { font-size: 1.45rem; line-height: 1.25; font-weight: 750; }
     background: currentColor;
   }
 }
+
+/* Navigation Glassy : le menu déroulant historique ne doit plus réapparaître */
+.site-header .menu-toggle,
+.site-header .navigation,
+.site-header .navigation.is-open {
+  display: none !important;
+}
